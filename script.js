@@ -1,5 +1,12 @@
 /* ============================================================
-   AUTHeNOVA APPLICATION STATE
+   AUTHeNOVA
+   AI-Based Fake Identity & Document Screening System
+   COMPLETE JAVASCRIPT
+============================================================ */
+
+
+/* ============================================================
+   1. APPLICATION STATE
 ============================================================ */
 
 const state = {
@@ -12,14 +19,216 @@ const state = {
 
 
 /* ============================================================
-   HELPER
+   2. HELPER
 ============================================================ */
 
 const $ = id => document.getElementById(id);
 
 
 /* ============================================================
-   NAVIGATION
+   3. OFFICER ACCOUNTS
+   DEMO ACCOUNTS
+============================================================ */
+
+const officerAccounts = {
+
+  "IND-123/25": {
+    password: "123456",
+    name: "Officer Arjun Sharma",
+    ssbId: "SSB-ID-00214",
+    location: "Panitanki, West Bengal",
+    role: "Checkpoint Screening Officer",
+    access: "Authorized",
+    avatar: "A"
+  },
+
+  "IND-456/25": {
+    password: "456789",
+    name: "Officer Riya Sen",
+    ssbId: "SSB-ID-00482",
+    location: "Rupaidiha, Uttar Pradesh",
+    role: "Senior Screening Officer",
+    access: "Authorized",
+    avatar: "R"
+  },
+
+  "IND-789/25": {
+    password: "789012",
+    name: "Officer Vikram Das",
+    ssbId: "SSB-ID-00631",
+    location: "Jaigaon, West Bengal",
+    role: "Checkpoint Intelligence Officer",
+    access: "Authorized",
+    avatar: "V"
+  },
+
+  "IND-321/26": {
+    password: "321654",
+    name: "Officer Neha Gupta",
+    ssbId: "SSB-ID-00817",
+    location: "Sunauli, Uttar Pradesh",
+    role: "Document Verification Officer",
+    access: "Authorized",
+    avatar: "N"
+  }
+
+};
+
+
+/* ============================================================
+   4. CURRENT OFFICER
+============================================================ */
+
+let currentOfficer = null;
+
+
+/* ============================================================
+   5. LOGIN ELEMENTS
+============================================================ */
+
+const loginPage =
+  document.getElementById("loginPage");
+
+const mainApp =
+  document.getElementById("mainApp");
+
+const enterSystemBtn =
+  document.getElementById("enterSystemBtn");
+
+const loginOfficerId =
+  document.getElementById("loginOfficerId");
+
+const loginPassword =
+  document.getElementById("loginPassword");
+
+const loginError =
+  document.getElementById("loginError");
+
+
+/* ============================================================
+   6. UPDATE OFFICER PROFILE
+   This changes EVERYTHING according to logged-in account.
+============================================================ */
+
+function updateOfficerProfile(officer) {
+
+  if (!officer) {
+    return;
+  }
+
+
+  /* ----------------------------------------------------------
+     HEADER
+  ---------------------------------------------------------- */
+
+  if ($("headerOfficerName")) {
+    $("headerOfficerName").textContent =
+      officer.name;
+  }
+
+  if ($("headerOfficerId")) {
+    $("headerOfficerId").textContent =
+      officer.ssbId;
+  }
+
+  if ($("headerAvatar")) {
+    $("headerAvatar").textContent =
+      officer.avatar;
+  }
+
+
+  /* ----------------------------------------------------------
+     PROFILE DROPDOWN
+  ---------------------------------------------------------- */
+
+  if ($("menuOfficerName")) {
+    $("menuOfficerName").textContent =
+      officer.name;
+  }
+
+  if ($("menuOfficerId")) {
+    $("menuOfficerId").textContent =
+      officer.ssbId;
+  }
+
+  if ($("menuLocation")) {
+    $("menuLocation").textContent =
+      officer.location;
+  }
+
+  if ($("menuRole")) {
+    $("menuRole").textContent =
+      officer.role;
+  }
+
+  if ($("menuAvatar")) {
+    $("menuAvatar").textContent =
+      officer.avatar;
+  }
+
+
+  /* ----------------------------------------------------------
+     PROFILE MODAL
+  ---------------------------------------------------------- */
+
+  if ($("profileOfficerName")) {
+    $("profileOfficerName").textContent =
+      officer.name;
+  }
+
+  if ($("profileOfficerId")) {
+    $("profileOfficerId").textContent =
+      officer.ssbId;
+  }
+
+  if ($("profileRole")) {
+    $("profileRole").textContent =
+      officer.role;
+  }
+
+  if ($("profileLocation")) {
+    $("profileLocation").textContent =
+      officer.location;
+  }
+
+  if ($("profileAccess")) {
+    $("profileAccess").textContent =
+      officer.access;
+  }
+
+  if ($("profileAvatar")) {
+    $("profileAvatar").textContent =
+      officer.avatar;
+  }
+
+
+  /* ----------------------------------------------------------
+     AUTHENTICATION PAGE
+  ---------------------------------------------------------- */
+
+  if ($("officerId")) {
+    $("officerId").value =
+      officer.ssbId;
+  }
+
+}
+
+
+/* ============================================================
+   7. OPEN MAIN APPLICATION
+============================================================ */
+
+function openMainApp() {
+
+  loginPage.style.display = "none";
+
+  mainApp.style.display = "block";
+
+}
+
+
+/* ============================================================
+   8. DOCUMENT NAVIGATION
 ============================================================ */
 
 document.querySelectorAll(".nav-btn").forEach(btn => {
@@ -28,15 +237,26 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 
     document
       .querySelectorAll(".nav-btn")
-      .forEach(b => b.classList.remove("active"));
+      .forEach(button => {
+        button.classList.remove("active");
+      });
 
     btn.classList.add("active");
 
+
     document
       .querySelectorAll(".page")
-      .forEach(p => p.classList.remove("active"));
+      .forEach(page => {
+        page.classList.remove("active");
+      });
 
-    $(btn.dataset.page).classList.add("active");
+
+    const targetPage =
+      $(btn.dataset.page);
+
+    if (targetPage) {
+      targetPage.classList.add("active");
+    }
 
   });
 
@@ -44,74 +264,110 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 
 
 /* ============================================================
-   DOCUMENT UPLOAD
+   9. DOCUMENT UPLOAD
 ============================================================ */
 
-$("uploadBox").addEventListener("click", () => {
-  $("fileInput").click();
-});
-
-
-/* Drag over */
-
-$("uploadBox").addEventListener("dragover", e => {
-
-  e.preventDefault();
-
-  $("uploadBox").style.background = "#eef3f7";
-
-});
-
-
-/* Drag leave */
-
-$("uploadBox").addEventListener("dragleave", () => {
-
-  $("uploadBox").style.background = "";
-
-});
-
-
-/* Drop */
-
-$("uploadBox").addEventListener("drop", e => {
-
-  e.preventDefault();
-
-  $("uploadBox").style.background = "";
-
-  addFiles([...e.dataTransfer.files]);
-
-});
-
-
-/* Normal file selection */
-
-$("fileInput").addEventListener("change", e => {
-
-  addFiles([...e.target.files]);
-
-});
+$("uploadBox").addEventListener(
+  "click",
+  () => {
+    $("fileInput").click();
+  }
+);
 
 
 /* ============================================================
-   ADD DOCUMENTS
+   10. DRAG OVER
+============================================================ */
+
+$("uploadBox").addEventListener(
+  "dragover",
+  e => {
+
+    e.preventDefault();
+
+    $("uploadBox").style.background =
+      "#eef3f7";
+
+  }
+);
+
+
+/* ============================================================
+   11. DRAG LEAVE
+============================================================ */
+
+$("uploadBox").addEventListener(
+  "dragleave",
+  () => {
+
+    $("uploadBox").style.background =
+      "";
+
+  }
+);
+
+
+/* ============================================================
+   12. DROP FILES
+============================================================ */
+
+$("uploadBox").addEventListener(
+  "drop",
+  e => {
+
+    e.preventDefault();
+
+    $("uploadBox").style.background =
+      "";
+
+    addFiles(
+      [...e.dataTransfer.files]
+    );
+
+  }
+);
+
+
+/* ============================================================
+   13. NORMAL FILE SELECTION
+============================================================ */
+
+$("fileInput").addEventListener(
+  "change",
+  e => {
+
+    addFiles(
+      [...e.target.files]
+    );
+
+  }
+);
+
+
+/* ============================================================
+   14. ADD DOCUMENTS
 ============================================================ */
 
 function addFiles(files) {
 
   files
-    .filter(file => file.type.startsWith("image/"))
+    .filter(file =>
+      file.type.startsWith("image/")
+    )
     .forEach(file => {
 
-      const alreadyExists = state.files.some(
-        existing =>
-          existing.name === file.name &&
-          existing.size === file.size
-      );
+      const alreadyExists =
+        state.files.some(
+          existing =>
+            existing.name === file.name &&
+            existing.size === file.size
+        );
+
 
       if (!alreadyExists) {
+
         state.files.push(file);
+
       }
 
     });
@@ -125,47 +381,52 @@ function addFiles(files) {
 
 
 /* ============================================================
-   DOCUMENT QUEUE
+   15. DOCUMENT QUEUE
 ============================================================ */
 
 function renderQueue() {
 
-  $("docQueue").innerHTML = state.files
-    .map((file, index) => {
+  $("docQueue").innerHTML =
+    state.files
+      .map((file, index) => {
 
-      const imageURL = URL.createObjectURL(file);
+        const imageURL =
+          URL.createObjectURL(file);
 
-      return `
-        <div class="doc-thumb">
 
-          <img
-            src="${imageURL}"
-            alt="${escapeHTML(file.name)}"
-          >
+        return `
 
-          <button
-            class="thumb-remove"
-            type="button"
-            onclick="removeFile(${index})"
-          >
-            ×
-          </button>
+          <div class="doc-thumb">
 
-          <div class="thumb-label">
-            ${escapeHTML(file.name)}
+            <img
+              src="${imageURL}"
+              alt="${escapeHTML(file.name)}"
+            >
+
+            <button
+              class="thumb-remove"
+              type="button"
+              onclick="removeFile(${index})"
+            >
+              ×
+            </button>
+
+            <div class="thumb-label">
+              ${escapeHTML(file.name)}
+            </div>
+
           </div>
 
-        </div>
-      `;
+        `;
 
-    })
-    .join("");
+      })
+      .join("");
 
 }
 
 
 /* ============================================================
-   REMOVE DOCUMENT
+   16. REMOVE DOCUMENT
 ============================================================ */
 
 function removeFile(index) {
@@ -180,83 +441,91 @@ function removeFile(index) {
 
 
 /* ============================================================
-   UPDATE SCREENING BUTTON
+   17. UPDATE SCAN BUTTON
 ============================================================ */
 
 function updateScanButton() {
 
-  $("scanBtn").disabled = state.files.length === 0;
+  $("scanBtn").disabled =
+    state.files.length === 0;
 
 }
 
 
 /* ============================================================
-   FACE UPLOAD
+   18. FACE UPLOAD
 ============================================================ */
 
-$("faceUploadBox").addEventListener("click", () => {
+$("faceUploadBox").addEventListener(
+  "click",
+  () => {
 
-  $("faceInput").click();
+    $("faceInput").click();
 
-});
+  }
+);
 
 
 /* ============================================================
-   FACE PHOTO SELECTION
+   19. FACE PHOTO SELECTION
 ============================================================ */
 
-$("faceInput").addEventListener("change", e => {
+$("faceInput").addEventListener(
+  "change",
+  e => {
 
-  const file = e.target.files[0];
+    const file =
+      e.target.files[0];
 
-  if (!file) {
-    return;
+
+    if (!file) {
+      return;
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+      alert(
+        "Please select a valid image."
+      );
+
+      $("faceInput").value = "";
+
+      return;
+
+    }
+
+
+    state.face = file;
+
+
+    const previewURL =
+      URL.createObjectURL(file);
+
+
+    $("facePreview").src =
+      previewURL;
+
+
+    $("facePreviewContainer")
+      .style.display = "block";
+
   }
-
-
-  /* Validate image */
-
-  if (!file.type.startsWith("image/")) {
-
-    alert("Please select a valid image.");
-
-    $("faceInput").value = "";
-
-    return;
-  }
-
-
-  /* Store face */
-
-  state.face = file;
-
-
-  /* Create preview URL */
-
-  const previewURL = URL.createObjectURL(file);
-
-
-  /* Set image source */
-
-  $("facePreview").src = previewURL;
-
-
-  /* Show preview container */
-
-  $("facePreviewContainer").style.display = "block";
-
-});
+);
 
 
 /* ============================================================
-   REMOVE FACE PHOTO
+   20. REMOVE FACE PHOTO
 ============================================================ */
 
-$("removeFaceBtn").addEventListener("click", () => {
+$("removeFaceBtn").addEventListener(
+  "click",
+  () => {
 
-  removeFace();
+    removeFace();
 
-});
+  }
+);
 
 
 function removeFace() {
@@ -265,15 +534,17 @@ function removeFace() {
 
   $("faceInput").value = "";
 
-  $("facePreview").removeAttribute("src");
+  $("facePreview")
+    .removeAttribute("src");
 
-  $("facePreviewContainer").style.display = "none";
+  $("facePreviewContainer")
+    .style.display = "none";
 
 }
 
 
 /* ============================================================
-   ESCAPE HTML
+   21. ESCAPE HTML
 ============================================================ */
 
 function escapeHTML(value) {
@@ -289,58 +560,79 @@ function escapeHTML(value) {
 
 
 /* ============================================================
-   DOCUMENT TYPE DETECTION
+   22. DOCUMENT TYPE DETECTION
 ============================================================ */
 
 function detectType(name) {
 
-  const n = name.toLowerCase();
+  const n =
+    name.toLowerCase();
+
 
   if (n.includes("passport")) {
+
     return "Passport";
+
   }
 
+
   if (n.includes("visa")) {
+
     return "Visa";
+
   }
+
 
   if (
     n.includes("license") ||
     n.includes("licence")
   ) {
+
     return "Driving Licence";
+
   }
 
+
   if (n.includes("permit")) {
+
     return "Travel Permit";
+
   }
 
 
   return [
+
     "National ID",
     "Passport",
     "Visa",
     "National ID"
-  ][state.files.length % 4];
+
+  ][
+    state.files.length % 4
+  ];
 
 }
 
 
 /* ============================================================
-   RISK CALCULATION
+   23. RISK CALCULATION
+   Demo calculation only.
 ============================================================ */
 
 function riskFor(index) {
 
   return 8 + (
-    (index * 17 + state.files.length * 7) % 48
+    (
+      index * 17 +
+      state.files.length * 7
+    ) % 48
   );
 
 }
 
 
 /* ============================================================
-   DECISION
+   24. DECISION
 ============================================================ */
 
 function decision(risk) {
@@ -353,20 +645,29 @@ function decision(risk) {
 
 
 /* ============================================================
-   HASH
+   25. HASH
 ============================================================ */
 
 function hash(value) {
 
   let h = 2166136261;
 
-  for (let i = 0; i < value.length; i++) {
+
+  for (
+    let i = 0;
+    i < value.length;
+    i++
+  ) {
 
     h ^= value.charCodeAt(i);
 
-    h = Math.imul(h, 16777619);
+    h = Math.imul(
+      h,
+      16777619
+    );
 
   }
+
 
   return (
     "00000000" +
@@ -377,7 +678,7 @@ function hash(value) {
 
 
 /* ============================================================
-   SCREENING BUTTON
+   26. SCREENING BUTTON
 ============================================================ */
 
 $("scanBtn").addEventListener(
@@ -387,7 +688,7 @@ $("scanBtn").addEventListener(
 
 
 /* ============================================================
-   RUN SCREENING
+   27. RUN SCREENING
 ============================================================ */
 
 function runScreening() {
@@ -400,75 +701,94 @@ function runScreening() {
   state.sessions++;
 
 
-  const now = new Date();
+  const now =
+    new Date();
 
 
-  const results = state.files.map(
-    (file, index) => {
-
-      const type = detectType(file.name);
-
-      const risk = riskFor(index);
-
-      const dec = decision(risk);
+  const results =
+    state.files.map(
+      (file, index) => {
 
 
-      const id =
-        (
-          type === "Passport"
-            ? "P"
-            : type === "Visa"
-              ? "V"
-              : "ID"
-        ) +
-        String(
-          100000 +
-          index +
-          state.sessions
+        const type =
+          detectType(file.name);
+
+
+        const risk =
+          riskFor(index);
+
+
+        const dec =
+          decision(risk);
+
+
+        const id =
+          (
+            type === "Passport"
+              ? "P"
+              : type === "Visa"
+                ? "V"
+                : "ID"
+          ) +
+          String(
+            100000 +
+            index +
+            state.sessions
+          );
+
+
+        const item = {
+
+          time:
+            now.toLocaleTimeString(
+              [],
+              {
+                hour: "2-digit",
+                minute: "2-digit"
+              }
+            ),
+
+          type,
+
+          id,
+
+          risk,
+
+          dec,
+
+          file
+
+        };
+
+
+        state.screenings.unshift(
+          item
         );
 
 
-      const item = {
+        state.audit.unshift({
 
-        time: now.toLocaleTimeString(
-          [],
-          {
-            hour: "2-digit",
-            minute: "2-digit"
-          }
-        ),
+          ...item,
 
-        type,
-        id,
-        risk,
-        dec,
-        file
+          officer:
+            currentOfficer
+              ? currentOfficer.name
+              : "Officer on Duty",
 
-      };
+          hash:
+            hash(
+              file.name +
+              now.getTime() +
+              index
+            )
 
-
-      state.screenings.unshift(item);
+        });
 
 
-      state.audit.unshift({
+        return item;
 
-        ...item,
-
-        officer: "Officer on Duty",
-
-        hash: hash(
-          file.name +
-          now.getTime() +
-          index
-        )
-
-      });
-
-
-      return item;
-
-    }
-  );
+      }
+    );
 
 
   renderSummary(results);
@@ -477,32 +797,38 @@ function runScreening() {
 
   updateDashboard();
 
-  $("resultsCard").style.display = "block";
+
+  $("resultsCard")
+    .style.display = "block";
 
 }
 
 
 /* ============================================================
-   SUMMARY
+   28. SUMMARY
 ============================================================ */
 
 function renderSummary(results) {
 
   const flagged =
     results.filter(
-      item => item.dec === "FLAGGED"
+      item =>
+        item.dec === "FLAGGED"
     ).length;
 
 
-  const total = results.length;
+  const total =
+    results.length;
 
 
-  const avg = Math.round(
-    results.reduce(
-      (sum, item) => sum + item.risk,
-      0
-    ) / total
-  );
+  const avg =
+    Math.round(
+      results.reduce(
+        (sum, item) =>
+          sum + item.risk,
+        0
+      ) / total
+    );
 
 
   const level =
@@ -513,7 +839,8 @@ function renderSummary(results) {
         : "HIGH";
 
 
-  const cls = level.toLowerCase();
+  const cls =
+    level.toLowerCase();
 
 
   $("summaryArea").innerHTML = `
@@ -535,17 +862,27 @@ function renderSummary(results) {
 
       <div class="summary-box">
 
-        <div class="num ${flagged ? "high" : "low"}">
+        <div class="num ${
+          flagged
+            ? "high"
+            : "low"
+        }">
 
-          ${flagged ? flagged : total}
+          ${
+            flagged
+              ? flagged
+              : total
+          }
 
         </div>
 
         <small>
 
-          ${flagged
-            ? "Items flagged"
-            : "Items cleared"}
+          ${
+            flagged
+              ? "Items flagged"
+              : "Items cleared"
+          }
 
         </small>
 
@@ -560,17 +897,27 @@ function renderSummary(results) {
         COMBINED RISK SCORE
       </small>
 
-      <div class="risk-score ${cls}">
+
+      <div
+        class="risk-score ${cls}"
+      >
         ${avg}/100
       </div>
 
-      <span class="risk-label ${cls}-label">
+
+      <span
+        class="risk-label ${cls}-label"
+      >
         ${level} RISK
       </span>
 
+
       <p
         class="sub"
-        style="margin-top:10px;margin-bottom:0"
+        style="
+          margin-top:10px;
+          margin-bottom:0;
+        "
       >
 
         ${
@@ -589,7 +936,7 @@ function renderSummary(results) {
 
 
 /* ============================================================
-   DOCUMENT RESULTS
+   29. DOCUMENT RESULTS
 ============================================================ */
 
 function renderResults(results) {
@@ -599,12 +946,15 @@ function renderResults(results) {
       .map(item => {
 
         const imageURL =
-          URL.createObjectURL(item.file);
+          URL.createObjectURL(
+            item.file
+          );
 
 
         return `
 
           <div class="doc-result-card">
+
 
             <div class="doc-result-header">
 
@@ -642,6 +992,7 @@ function renderResults(results) {
             </div>
 
 
+
             <div class="pipeline-mini">
 
               <span class="tag ok">
@@ -663,9 +1014,7 @@ function renderResults(results) {
                     : "ok"
                 }"
               >
-
                 Fraud Risk
-
               </span>
 
               <span class="tag ok">
@@ -675,7 +1024,9 @@ function renderResults(results) {
             </div>
 
 
+
             <div class="fields">
+
 
               <div class="field ok">
 
@@ -730,7 +1081,9 @@ function renderResults(results) {
 
               </div>
 
+
             </div>
+
 
 
             <div class="doc-risk-row">
@@ -738,6 +1091,7 @@ function renderResults(results) {
               <span class="muted">
                 AI confidence
               </span>
+
 
               <span
                 class="score ${
@@ -753,6 +1107,7 @@ function renderResults(results) {
 
             </div>
 
+
           </div>
 
         `;
@@ -764,10 +1119,11 @@ function renderResults(results) {
 
 
 /* ============================================================
-   DASHBOARD
+   30. DASHBOARD
 ============================================================ */
 
 function updateDashboard() {
+
 
   $("statTotal").textContent =
     state.screenings.length;
@@ -775,13 +1131,15 @@ function updateDashboard() {
 
   $("statGenuine").textContent =
     state.screenings.filter(
-      item => item.dec === "CLEARED"
+      item =>
+        item.dec === "CLEARED"
     ).length;
 
 
   $("statFlagged").textContent =
     state.screenings.filter(
-      item => item.dec === "FLAGGED"
+      item =>
+        item.dec === "FLAGGED"
     ).length;
 
 
@@ -789,9 +1147,13 @@ function updateDashboard() {
     state.sessions;
 
 
-  /* Recent screenings */
+
+  /* ----------------------------------------------------------
+     RECENT SCREENINGS
+  ---------------------------------------------------------- */
 
   $("recentTableBody").innerHTML =
+
     state.screenings
       .slice(0, 8)
       .map(item => `
@@ -817,9 +1179,7 @@ function updateDashboard() {
                 : "high"
             }"
           >
-
             ${item.risk}/100
-
           </td>
 
           <td>
@@ -831,9 +1191,7 @@ function updateDashboard() {
                   : "high-label"
               }"
             >
-
               ${item.dec}
-
             </span>
 
           </td>
@@ -843,140 +1201,170 @@ function updateDashboard() {
       `)
       .join("")
 
-
       ||
 
       `
+
         <tr>
 
           <td
             colspan="5"
             class="muted"
           >
-
             No screenings yet —
             run a check from Screening.
-
           </td>
 
         </tr>
+
       `;
 
 
-  /* Audit */
+
+  /* ----------------------------------------------------------
+     AUDIT TRAIL
+  ---------------------------------------------------------- */
 
   $("auditTableBody").innerHTML =
+
     state.audit
       .slice(0, 12)
-      .map((item, index) => `
+      .map(
+        (item, index) => `
 
-        <tr>
+          <tr>
 
-          <td>
-            #${state.audit.length - index}
-          </td>
+            <td>
+              #${state.audit.length - index}
+            </td>
 
-          <td>
-            ${item.time}
-          </td>
+            <td>
+              ${item.time}
+            </td>
 
-          <td>
-            ${item.officer}
-          </td>
+            <td>
+              ${escapeHTML(item.officer)}
+            </td>
 
-          <td>
-            ${item.type}
-          </td>
+            <td>
+              ${item.type}
+            </td>
 
-          <td>
-            ${item.dec}
-          </td>
+            <td>
+              ${item.dec}
+            </td>
 
-          <td>
-            ${item.hash}
-          </td>
+            <td>
+              ${item.hash}
+            </td>
 
-        </tr>
+          </tr>
 
-      `)
+        `
+      )
       .join("")
-
 
       ||
 
       `
+
         <tr>
 
           <td
             colspan="6"
             class="muted"
           >
-
             No audit records yet.
-
           </td>
 
         </tr>
+
       `;
 
 }
 
 
 /* ============================================================
-   AUTHENTICATION DEMO
+   31. AUTHENTICATION DEMO
 ============================================================ */
 
 $("loginBtn").addEventListener(
   "click",
   () => {
 
-    const ok =
-      $("officerId").value.trim() &&
-      $("officerPin").value.trim();
+    const id =
+      $("officerId")
+        .value
+        .trim();
+
+
+    const pin =
+      $("officerPin")
+        .value
+        .trim();
+
+
+    const valid =
+      id.length > 0 &&
+      pin.length > 0;
 
 
     $("loginStatus").textContent =
-      ok
+      valid
         ? "Authentication successful — demo session active."
         : "Enter Officer ID and PIN.";
 
 
     $("loginStatus").className =
       "status-msg " +
-      (ok ? "ok" : "fail");
+      (
+        valid
+          ? "ok"
+          : "fail"
+      );
 
   }
 );
 
 
 /* ============================================================
-   DIGILOCKER DEMO
+   32. DIGILOCKER DEMO
 ============================================================ */
 
 $("digilockerBtn").addEventListener(
   "click",
   () => {
 
-    const ok =
-      $("digilockerRef").value.trim();
+    const ref =
+      $("digilockerRef")
+        .value
+        .trim();
+
+
+    const valid =
+      ref.length > 0;
 
 
     $("digilockerStatus").textContent =
-      ok
+      valid
         ? "DigiLocker verification response received — demo only."
         : "Enter a document reference number.";
 
 
     $("digilockerStatus").className =
       "status-msg " +
-      (ok ? "ok" : "fail");
+      (
+        valid
+          ? "ok"
+          : "fail"
+      );
 
   }
 );
 
 
 /* ============================================================
-   RESET EVERYTHING
+   33. RESET EVERYTHING
 ============================================================ */
 
 $("resetBtn").addEventListener(
@@ -999,20 +1387,16 @@ $("resetBtn").addEventListener(
     $("faceInput").value = "";
 
 
-    /* Remove face preview completely */
-
-    $("facePreview").removeAttribute("src");
-
-    $("facePreviewContainer").style.display =
-      "none";
+    $("facePreview")
+      .removeAttribute("src");
 
 
-    /* Clear document queue */
+    $("facePreviewContainer")
+      .style.display = "none";
+
 
     $("docQueue").innerHTML = "";
 
-
-    /* Reset summary */
 
     $("summaryArea").innerHTML = `
 
@@ -1026,12 +1410,9 @@ $("resetBtn").addEventListener(
     `;
 
 
-    /* Hide results */
+    $("resultsCard")
+      .style.display = "none";
 
-    $("resultsCard").style.display = "none";
-
-
-    /* Disable screening */
 
     $("scanBtn").disabled = true;
 
@@ -1043,124 +1424,7 @@ $("resetBtn").addEventListener(
 
 
 /* ============================================================
-   INITIAL DASHBOARD
-============================================================ */
-
-updateDashboard();
-
-
-/* ============================================================
-   SECURE LOGIN SCREEN
-============================================================ */
-
-const loginPage =
-  document.getElementById("loginPage");
-
-const mainApp =
-  document.getElementById("mainApp");
-
-const enterSystemBtn =
-  document.getElementById("enterSystemBtn");
-
-const loginOfficerId =
-  document.getElementById("loginOfficerId");
-
-const loginPassword =
-  document.getElementById("loginPassword");
-
-const loginError =
-  document.getElementById("loginError");
-
-
-/* ============================================================
-   OPEN MAIN APPLICATION
-============================================================ */
-
-function openMainApp() {
-
-  loginPage.style.display = "none";
-
-  mainApp.style.display = "block";
-
-  sessionStorage.setItem(
-    "autheNovaLoggedIn",
-    "true"
-  );
-
-}
-
-
-/* ============================================================
-   REMEMBER LOGIN
-============================================================ */
-
-if (
-  sessionStorage.getItem(
-    "autheNovaLoggedIn"
-  ) === "true"
-) {
-
-  openMainApp();
-
-}
-
-
-/* ============================================================
-   LOGIN BUTTON
-============================================================ */
-
-enterSystemBtn.addEventListener(
-  "click",
-  () => {
-
-    if (
-      !loginOfficerId.value.trim() ||
-      !loginPassword.value.trim()
-    ) {
-
-      loginError.textContent =
-        "Please enter both Officer ID and Password / PIN.";
-
-      return;
-
-    }
-
-
-    loginError.textContent = "";
-
-    openMainApp();
-
-  }
-);
-
-
-/* ============================================================
-   ENTER KEY LOGIN
-============================================================ */
-
-[
-  loginOfficerId,
-  loginPassword
-].forEach(input => {
-
-  input.addEventListener(
-    "keydown",
-    e => {
-
-      if (e.key === "Enter") {
-
-        enterSystemBtn.click();
-
-      }
-
-    }
-  );
-
-});
-
-
-/* ============================================================
-   PROFILE MENU
+   34. PROFILE MENU
 ============================================================ */
 
 const profileBtn =
@@ -1182,7 +1446,9 @@ const closeProfile =
   document.getElementById("closeProfile");
 
 
-/* Open profile menu */
+/* ============================================================
+   35. OPEN PROFILE MENU
+============================================================ */
 
 profileBtn.addEventListener(
   "click",
@@ -1190,13 +1456,17 @@ profileBtn.addEventListener(
 
     e.stopPropagation();
 
-    profileMenu.classList.toggle("show");
+    profileMenu.classList.toggle(
+      "show"
+    );
 
   }
 );
 
 
-/* Close menu outside click */
+/* ============================================================
+   36. CLOSE PROFILE MENU
+============================================================ */
 
 document.addEventListener(
   "click",
@@ -1207,49 +1477,9 @@ document.addEventListener(
       e.target !== profileBtn
     ) {
 
-      profileMenu.classList.remove("show");
-
-    }
-
-  }
-);
-
-
-/* Profile modal */
-
-myProfileBtn.addEventListener(
-  "click",
-  () => {
-
-    profileMenu.classList.remove("show");
-
-    profileModal.classList.add("show");
-
-  }
-);
-
-
-/* Close modal */
-
-closeProfile.addEventListener(
-  "click",
-  () => {
-
-    profileModal.classList.remove("show");
-
-  }
-);
-
-
-/* Close modal by clicking background */
-
-profileModal.addEventListener(
-  "click",
-  e => {
-
-    if (e.target === profileModal) {
-
-      profileModal.classList.remove("show");
+      profileMenu.classList.remove(
+        "show"
+      );
 
     }
 
@@ -1258,30 +1488,358 @@ profileModal.addEventListener(
 
 
 /* ============================================================
-   LOGOUT
+   37. OPEN PROFILE MODAL
+============================================================ */
+
+myProfileBtn.addEventListener(
+  "click",
+  () => {
+
+    profileMenu.classList.remove(
+      "show"
+    );
+
+
+    profileModal.classList.add(
+      "show"
+    );
+
+  }
+);
+
+
+/* ============================================================
+   38. CLOSE PROFILE MODAL
+============================================================ */
+
+closeProfile.addEventListener(
+  "click",
+  () => {
+
+    profileModal.classList.remove(
+      "show"
+    );
+
+  }
+);
+
+
+/* ============================================================
+   39. CLOSE MODAL BY BACKGROUND
+============================================================ */
+
+profileModal.addEventListener(
+  "click",
+  e => {
+
+    if (
+      e.target === profileModal
+    ) {
+
+      profileModal.classList.remove(
+        "show"
+      );
+
+    }
+
+  }
+);
+
+
+/* ============================================================
+   40. SECURE LOGIN
+============================================================ */
+
+enterSystemBtn.addEventListener(
+  "click",
+  () => {
+
+
+    const officerId =
+      loginOfficerId
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    const password =
+      loginPassword
+        .value
+        .trim();
+
+
+
+    /* --------------------------------------------------------
+       EMPTY CHECK
+    -------------------------------------------------------- */
+
+    if (!officerId || !password) {
+
+      loginError.textContent =
+        "Please enter both Officer ID and Password / PIN.";
+
+      return;
+
+    }
+
+
+
+    /* --------------------------------------------------------
+       OFFICER ID FORMAT
+    -------------------------------------------------------- */
+
+    const officerIdPattern =
+      /^IND-\d{3}\/\d{2}$/;
+
+
+    if (
+      !officerIdPattern.test(
+        officerId
+      )
+    ) {
+
+      loginError.textContent =
+        "Invalid Officer ID format. Use IND-123/25.";
+
+      return;
+
+    }
+
+
+
+    /* --------------------------------------------------------
+       PIN FORMAT
+    -------------------------------------------------------- */
+
+    const pinPattern =
+      /^\d{6}$/;
+
+
+    if (
+      !pinPattern.test(
+        password
+      )
+    ) {
+
+      loginError.textContent =
+        "Password / PIN must contain exactly 6 numbers.";
+
+      return;
+
+    }
+
+
+
+    /* --------------------------------------------------------
+       FIND ACCOUNT
+    -------------------------------------------------------- */
+
+    const officer =
+      officerAccounts[
+        officerId
+      ];
+
+
+    if (!officer) {
+
+      loginError.textContent =
+        "Officer account not found.";
+
+      return;
+
+    }
+
+
+
+    /* --------------------------------------------------------
+       PASSWORD CHECK
+    -------------------------------------------------------- */
+
+    if (
+      officer.password !== password
+    ) {
+
+      loginError.textContent =
+        "Incorrect Password / PIN.";
+
+      return;
+
+    }
+
+
+
+    /* --------------------------------------------------------
+       SUCCESS
+    -------------------------------------------------------- */
+
+    currentOfficer = {
+
+      ...officer,
+
+      officerId: officerId
+
+    };
+
+
+    /* Save account in browser session */
+
+    sessionStorage.setItem(
+      "autheNovaOfficer",
+      JSON.stringify(
+        currentOfficer
+      )
+    );
+
+
+    /* Update all profile information */
+
+    updateOfficerProfile(
+      currentOfficer
+    );
+
+
+    /* Open system */
+
+    loginError.textContent = "";
+
+    openMainApp();
+
+  }
+);
+
+
+/* ============================================================
+   41. ENTER KEY LOGIN
+============================================================ */
+
+[
+  loginOfficerId,
+  loginPassword
+
+].forEach(input => {
+
+  input.addEventListener(
+    "keydown",
+    e => {
+
+      if (
+        e.key === "Enter"
+      ) {
+
+        enterSystemBtn.click();
+
+      }
+
+    }
+  );
+
+});
+
+
+/* ============================================================
+   42. LOGOUT
 ============================================================ */
 
 logoutBtn.addEventListener(
   "click",
   () => {
 
+
+    currentOfficer = null;
+
+
     sessionStorage.removeItem(
-      "autheNovaLoggedIn"
+      "autheNovaOfficer"
     );
 
 
-    profileMenu.classList.remove("show");
-
-    mainApp.style.display = "none";
-
-    loginPage.style.display = "flex";
+    profileMenu.classList.remove(
+      "show"
+    );
 
 
-    loginOfficerId.value = "";
+    profileModal.classList.remove(
+      "show"
+    );
 
-    loginPassword.value = "";
 
-    loginError.textContent = "";
+    mainApp.style.display =
+      "none";
+
+
+    loginPage.style.display =
+      "flex";
+
+
+    loginOfficerId.value =
+      "";
+
+
+    loginPassword.value =
+      "";
+
+
+    loginError.textContent =
+      "";
 
   }
 );
+
+
+/* ============================================================
+   43. RESTORE LOGGED-IN OFFICER
+============================================================ */
+
+const savedOfficer =
+  sessionStorage.getItem(
+    "autheNovaOfficer"
+  );
+
+
+if (savedOfficer) {
+
+  try {
+
+    currentOfficer =
+      JSON.parse(
+        savedOfficer
+      );
+
+
+    updateOfficerProfile(
+      currentOfficer
+    );
+
+
+    openMainApp();
+
+
+  } catch (error) {
+
+    console.error(
+      "Unable to restore officer session:",
+      error
+    );
+
+
+    sessionStorage.removeItem(
+      "autheNovaOfficer"
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   44. INITIAL DASHBOARD
+============================================================ */
+
+updateDashboard();
+
+
+/* ============================================================
+   45. INITIAL SCAN BUTTON
+============================================================ */
+
+updateScanButton();

@@ -1,33 +1,16 @@
 /* ============================================================
-   AUTHeNOVA
+   AUTHeNOVA — FRONTEND PROTOTYPE
    AI-Based Fake Identity & Document Screening System
-   COMPLETE JAVASCRIPT
+
+   NOTE:
+   This is a frontend demonstration prototype.
+   Risk scoring, face matching and DigiLocker verification
+   are simulated for demonstration purposes.
 ============================================================ */
 
 
 /* ============================================================
-   1. APPLICATION STATE
-============================================================ */
-
-const state = {
-  files: [],
-  face: null,
-  screenings: [],
-  audit: [],
-  sessions: 0
-};
-
-
-/* ============================================================
-   2. HELPER
-============================================================ */
-
-const $ = id => document.getElementById(id);
-
-
-/* ============================================================
-   3. OFFICER ACCOUNTS
-   DEMO ACCOUNTS
+   OFFICER DEMO ACCOUNTS
 ============================================================ */
 
 const officerAccounts = {
@@ -76,475 +59,35 @@ const officerAccounts = {
 
 
 /* ============================================================
-   4. CURRENT OFFICER
+   APPLICATION STATE
 ============================================================ */
 
-let currentOfficer = null;
+const state = {
+
+  files: [],
+
+  face: null,
+
+  screenings: [],
+
+  audit: [],
+
+  sessions: 0,
+
+  currentOfficer: null
+
+};
 
 
 /* ============================================================
-   5. LOGIN ELEMENTS
+   HELPER
 ============================================================ */
 
-const loginPage =
-  document.getElementById("loginPage");
-
-const mainApp =
-  document.getElementById("mainApp");
-
-const enterSystemBtn =
-  document.getElementById("enterSystemBtn");
-
-const loginOfficerId =
-  document.getElementById("loginOfficerId");
-
-const loginPassword =
-  document.getElementById("loginPassword");
-
-const loginError =
-  document.getElementById("loginError");
+const $ = id => document.getElementById(id);
 
 
 /* ============================================================
-   6. UPDATE OFFICER PROFILE
-   This changes EVERYTHING according to logged-in account.
-============================================================ */
-
-function updateOfficerProfile(officer) {
-
-  if (!officer) {
-    return;
-  }
-
-
-  /* ----------------------------------------------------------
-     HEADER
-  ---------------------------------------------------------- */
-
-  if ($("headerOfficerName")) {
-    $("headerOfficerName").textContent =
-      officer.name;
-  }
-
-  if ($("headerOfficerId")) {
-    $("headerOfficerId").textContent =
-      officer.ssbId;
-  }
-
-  if ($("headerAvatar")) {
-    $("headerAvatar").textContent =
-      officer.avatar;
-  }
-
-
-  /* ----------------------------------------------------------
-     PROFILE DROPDOWN
-  ---------------------------------------------------------- */
-
-  if ($("menuOfficerName")) {
-    $("menuOfficerName").textContent =
-      officer.name;
-  }
-
-  if ($("menuOfficerId")) {
-    $("menuOfficerId").textContent =
-      officer.ssbId;
-  }
-
-  if ($("menuLocation")) {
-    $("menuLocation").textContent =
-      officer.location;
-  }
-
-  if ($("menuRole")) {
-    $("menuRole").textContent =
-      officer.role;
-  }
-
-  if ($("menuAvatar")) {
-    $("menuAvatar").textContent =
-      officer.avatar;
-  }
-
-
-  /* ----------------------------------------------------------
-     PROFILE MODAL
-  ---------------------------------------------------------- */
-
-  if ($("profileOfficerName")) {
-    $("profileOfficerName").textContent =
-      officer.name;
-  }
-
-  if ($("profileOfficerId")) {
-    $("profileOfficerId").textContent =
-      officer.ssbId;
-  }
-
-  if ($("profileRole")) {
-    $("profileRole").textContent =
-      officer.role;
-  }
-
-  if ($("profileLocation")) {
-    $("profileLocation").textContent =
-      officer.location;
-  }
-
-  if ($("profileAccess")) {
-    $("profileAccess").textContent =
-      officer.access;
-  }
-
-  if ($("profileAvatar")) {
-    $("profileAvatar").textContent =
-      officer.avatar;
-  }
-
-
-  /* ----------------------------------------------------------
-     AUTHENTICATION PAGE
-  ---------------------------------------------------------- */
-
-  if ($("officerId")) {
-    $("officerId").value =
-      officer.ssbId;
-  }
-
-}
-
-
-/* ============================================================
-   7. OPEN MAIN APPLICATION
-============================================================ */
-
-function openMainApp() {
-
-  loginPage.style.display = "none";
-
-  mainApp.style.display = "block";
-
-}
-
-
-/* ============================================================
-   8. DOCUMENT NAVIGATION
-============================================================ */
-
-document.querySelectorAll(".nav-btn").forEach(btn => {
-
-  btn.addEventListener("click", () => {
-
-    document
-      .querySelectorAll(".nav-btn")
-      .forEach(button => {
-        button.classList.remove("active");
-      });
-
-    btn.classList.add("active");
-
-
-    document
-      .querySelectorAll(".page")
-      .forEach(page => {
-        page.classList.remove("active");
-      });
-
-
-    const targetPage =
-      $(btn.dataset.page);
-
-    if (targetPage) {
-      targetPage.classList.add("active");
-    }
-
-  });
-
-});
-
-
-/* ============================================================
-   9. DOCUMENT UPLOAD
-============================================================ */
-
-$("uploadBox").addEventListener(
-  "click",
-  () => {
-    $("fileInput").click();
-  }
-);
-
-
-/* ============================================================
-   10. DRAG OVER
-============================================================ */
-
-$("uploadBox").addEventListener(
-  "dragover",
-  e => {
-
-    e.preventDefault();
-
-    $("uploadBox").style.background =
-      "#eef3f7";
-
-  }
-);
-
-
-/* ============================================================
-   11. DRAG LEAVE
-============================================================ */
-
-$("uploadBox").addEventListener(
-  "dragleave",
-  () => {
-
-    $("uploadBox").style.background =
-      "";
-
-  }
-);
-
-
-/* ============================================================
-   12. DROP FILES
-============================================================ */
-
-$("uploadBox").addEventListener(
-  "drop",
-  e => {
-
-    e.preventDefault();
-
-    $("uploadBox").style.background =
-      "";
-
-    addFiles(
-      [...e.dataTransfer.files]
-    );
-
-  }
-);
-
-
-/* ============================================================
-   13. NORMAL FILE SELECTION
-============================================================ */
-
-$("fileInput").addEventListener(
-  "change",
-  e => {
-
-    addFiles(
-      [...e.target.files]
-    );
-
-  }
-);
-
-
-/* ============================================================
-   14. ADD DOCUMENTS
-============================================================ */
-
-function addFiles(files) {
-
-  files
-    .filter(file =>
-      file.type.startsWith("image/")
-    )
-    .forEach(file => {
-
-      const alreadyExists =
-        state.files.some(
-          existing =>
-            existing.name === file.name &&
-            existing.size === file.size
-        );
-
-
-      if (!alreadyExists) {
-
-        state.files.push(file);
-
-      }
-
-    });
-
-
-  renderQueue();
-
-  updateScanButton();
-
-}
-
-
-/* ============================================================
-   15. DOCUMENT QUEUE
-============================================================ */
-
-function renderQueue() {
-
-  $("docQueue").innerHTML =
-    state.files
-      .map((file, index) => {
-
-        const imageURL =
-          URL.createObjectURL(file);
-
-
-        return `
-
-          <div class="doc-thumb">
-
-            <img
-              src="${imageURL}"
-              alt="${escapeHTML(file.name)}"
-            >
-
-            <button
-              class="thumb-remove"
-              type="button"
-              onclick="removeFile(${index})"
-            >
-              ×
-            </button>
-
-            <div class="thumb-label">
-              ${escapeHTML(file.name)}
-            </div>
-
-          </div>
-
-        `;
-
-      })
-      .join("");
-
-}
-
-
-/* ============================================================
-   16. REMOVE DOCUMENT
-============================================================ */
-
-function removeFile(index) {
-
-  state.files.splice(index, 1);
-
-  renderQueue();
-
-  updateScanButton();
-
-}
-
-
-/* ============================================================
-   17. UPDATE SCAN BUTTON
-============================================================ */
-
-function updateScanButton() {
-
-  $("scanBtn").disabled =
-    state.files.length === 0;
-
-}
-
-
-/* ============================================================
-   18. FACE UPLOAD
-============================================================ */
-
-$("faceUploadBox").addEventListener(
-  "click",
-  () => {
-
-    $("faceInput").click();
-
-  }
-);
-
-
-/* ============================================================
-   19. FACE PHOTO SELECTION
-============================================================ */
-
-$("faceInput").addEventListener(
-  "change",
-  e => {
-
-    const file =
-      e.target.files[0];
-
-
-    if (!file) {
-      return;
-    }
-
-
-    if (!file.type.startsWith("image/")) {
-
-      alert(
-        "Please select a valid image."
-      );
-
-      $("faceInput").value = "";
-
-      return;
-
-    }
-
-
-    state.face = file;
-
-
-    const previewURL =
-      URL.createObjectURL(file);
-
-
-    $("facePreview").src =
-      previewURL;
-
-
-    $("facePreviewContainer")
-      .style.display = "block";
-
-  }
-);
-
-
-/* ============================================================
-   20. REMOVE FACE PHOTO
-============================================================ */
-
-$("removeFaceBtn").addEventListener(
-  "click",
-  () => {
-
-    removeFace();
-
-  }
-);
-
-
-function removeFace() {
-
-  state.face = null;
-
-  $("faceInput").value = "";
-
-  $("facePreview")
-    .removeAttribute("src");
-
-  $("facePreviewContainer")
-    .style.display = "none";
-
-}
-
-
-/* ============================================================
-   21. ESCAPE HTML
+   SAFE HTML ESCAPE
 ============================================================ */
 
 function escapeHTML(value) {
@@ -560,7 +103,296 @@ function escapeHTML(value) {
 
 
 /* ============================================================
-   22. DOCUMENT TYPE DETECTION
+   NAVIGATION
+============================================================ */
+
+document.querySelectorAll(".nav-btn").forEach(btn => {
+
+  btn.addEventListener("click", () => {
+
+    document
+      .querySelectorAll(".nav-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    document
+      .querySelectorAll(".page")
+      .forEach(page => page.classList.remove("active"));
+
+    const targetPage = $(btn.dataset.page);
+
+    if (targetPage) {
+      targetPage.classList.add("active");
+    }
+
+  });
+
+});
+
+
+/* ============================================================
+   DOCUMENT UPLOAD
+============================================================ */
+
+$("uploadBox").addEventListener("click", () => {
+
+  $("fileInput").click();
+
+});
+
+
+/* ============================================================
+   DRAG OVER
+============================================================ */
+
+$("uploadBox").addEventListener("dragover", event => {
+
+  event.preventDefault();
+
+  $("uploadBox").style.background = "#eef3f7";
+
+});
+
+
+/* ============================================================
+   DRAG LEAVE
+============================================================ */
+
+$("uploadBox").addEventListener("dragleave", () => {
+
+  $("uploadBox").style.background = "";
+
+});
+
+
+/* ============================================================
+   DROP DOCUMENTS
+============================================================ */
+
+$("uploadBox").addEventListener("drop", event => {
+
+  event.preventDefault();
+
+  $("uploadBox").style.background = "";
+
+  addFiles([...event.dataTransfer.files]);
+
+});
+
+
+/* ============================================================
+   NORMAL FILE SELECTION
+============================================================ */
+
+$("fileInput").addEventListener("change", event => {
+
+  addFiles([...event.target.files]);
+
+});
+
+
+/* ============================================================
+   ADD DOCUMENTS
+============================================================ */
+
+function addFiles(files) {
+
+  const validFiles = files.filter(file => {
+
+    if (!file.type.startsWith("image/")) {
+
+      return false;
+
+    }
+
+    return true;
+
+  });
+
+
+  validFiles.forEach(file => {
+
+    const alreadyExists = state.files.some(existing =>
+
+      existing.name === file.name &&
+      existing.size === file.size
+
+    );
+
+
+    if (!alreadyExists) {
+
+      state.files.push(file);
+
+    }
+
+  });
+
+
+  renderQueue();
+
+  updateScanButton();
+
+}
+
+
+/* ============================================================
+   DOCUMENT QUEUE
+============================================================ */
+
+function renderQueue() {
+
+  $("docQueue").innerHTML = state.files
+    .map((file, index) => {
+
+      const imageURL = URL.createObjectURL(file);
+
+      return `
+
+        <div class="doc-thumb">
+
+          <img
+            src="${imageURL}"
+            alt="${escapeHTML(file.name)}"
+          >
+
+          <button
+            class="thumb-remove"
+            type="button"
+            onclick="removeFile(${index})"
+          >
+            ×
+          </button>
+
+          <div class="thumb-label">
+            ${escapeHTML(file.name)}
+          </div>
+
+        </div>
+
+      `;
+
+    })
+    .join("");
+
+}
+
+
+/* ============================================================
+   REMOVE DOCUMENT
+============================================================ */
+
+function removeFile(index) {
+
+  if (
+    index < 0 ||
+    index >= state.files.length
+  ) {
+    return;
+  }
+
+
+  state.files.splice(index, 1);
+
+  renderQueue();
+
+  updateScanButton();
+
+}
+
+
+/* ============================================================
+   UPDATE SCREENING BUTTON
+============================================================ */
+
+function updateScanButton() {
+
+  $("scanBtn").disabled =
+    state.files.length === 0;
+
+}
+
+
+/* ============================================================
+   FACE PHOTO UPLOAD
+============================================================ */
+
+$("faceUploadBox").addEventListener("click", () => {
+
+  $("faceInput").click();
+
+});
+
+
+/* ============================================================
+   FACE PHOTO SELECTION
+============================================================ */
+
+$("faceInput").addEventListener("change", event => {
+
+  const file = event.target.files[0];
+
+  if (!file) {
+    return;
+  }
+
+
+  if (!file.type.startsWith("image/")) {
+
+    alert("Please select a valid image.");
+
+    $("faceInput").value = "";
+
+    return;
+
+  }
+
+
+  state.face = file;
+
+
+  const previewURL =
+    URL.createObjectURL(file);
+
+
+  $("facePreview").src =
+    previewURL;
+
+
+  $("facePreviewContainer").style.display =
+    "block";
+
+});
+
+
+/* ============================================================
+   REMOVE FACE PHOTO
+============================================================ */
+
+$("removeFaceBtn").addEventListener("click", () => {
+
+  removeFace();
+
+});
+
+
+function removeFace() {
+
+  state.face = null;
+
+  $("faceInput").value = "";
+
+  $("facePreview").removeAttribute("src");
+
+  $("facePreviewContainer").style.display =
+    "none";
+
+}
+
+
+/* ============================================================
+   DOCUMENT TYPE DETECTION
 ============================================================ */
 
 function detectType(name) {
@@ -593,20 +425,31 @@ function detectType(name) {
   }
 
 
-  if (n.includes("permit")) {
+  if (
+    n.includes("permit")
+  ) {
 
     return "Travel Permit";
 
   }
 
 
-  return [
+  if (
+    n.includes("aadhaar") ||
+    n.includes("aadhar") ||
+    n.includes("adhar")
+  ) {
 
+    return "Aadhaar Card";
+
+  }
+
+
+  return [
     "National ID",
     "Passport",
     "Visa",
-    "National ID"
-
+    "Aadhaar Card"
   ][
     state.files.length % 4
   ];
@@ -615,24 +458,81 @@ function detectType(name) {
 
 
 /* ============================================================
-   23. RISK CALCULATION
-   Demo calculation only.
+   RISK CALCULATION
+   DEMO / SIMULATED AI
+
+   Files containing:
+   fake
+   tampered
+   forged
+   suspicious
+   invalid
+
+   intentionally receive HIGH risk for presentation demos.
 ============================================================ */
 
 function riskFor(index) {
 
-  return 8 + (
+  const file =
+    state.files[index];
+
+
+  if (!file) {
+
+    return 20;
+
+  }
+
+
+  const filename =
+    file.name.toLowerCase();
+
+
+  const suspiciousWords = [
+
+    "fake",
+    "tampered",
+    "forged",
+    "suspicious",
+    "invalid",
+    "fraud"
+
+  ];
+
+
+  const suspicious =
+    suspiciousWords.some(word =>
+      filename.includes(word)
+    );
+
+
+  if (suspicious) {
+
+    return 75 +
+      (
+        (index * 7) % 21
+      );
+
+  }
+
+
+  /*
+    Normal documents receive
+    predictable low-to-medium scores.
+  */
+
+  return 8 +
     (
-      index * 17 +
-      state.files.length * 7
-    ) % 48
-  );
+      (index * 17 +
+       state.files.length * 7 +
+       state.sessions * 3) % 22
+    );
 
 }
 
 
 /* ============================================================
-   24. DECISION
+   INDIVIDUAL DECISION
 ============================================================ */
 
 function decision(risk) {
@@ -645,7 +545,8 @@ function decision(risk) {
 
 
 /* ============================================================
-   25. HASH
+   HASH
+   Demo integrity identifier only.
 ============================================================ */
 
 function hash(value) {
@@ -670,15 +571,17 @@ function hash(value) {
 
 
   return (
+
     "00000000" +
     (h >>> 0).toString(16)
+
   ).slice(-8).toUpperCase();
 
 }
 
 
 /* ============================================================
-   26. SCREENING BUTTON
+   SCREENING BUTTON
 ============================================================ */
 
 $("scanBtn").addEventListener(
@@ -688,13 +591,15 @@ $("scanBtn").addEventListener(
 
 
 /* ============================================================
-   27. RUN SCREENING
+   RUN SCREENING
 ============================================================ */
 
 function runScreening() {
 
   if (!state.files.length) {
+
     return;
+
   }
 
 
@@ -709,7 +614,6 @@ function runScreening() {
     state.files.map(
       (file, index) => {
 
-
         const type =
           detectType(file.name);
 
@@ -722,14 +626,25 @@ function runScreening() {
           decision(risk);
 
 
+        const prefix =
+
+          type === "Passport"
+            ? "P"
+
+            : type === "Visa"
+              ? "V"
+
+              : type === "Driving Licence"
+                ? "DL"
+
+                : type === "Travel Permit"
+                  ? "TP"
+
+                  : "ID";
+
+
         const id =
-          (
-            type === "Passport"
-              ? "P"
-              : type === "Visa"
-                ? "V"
-                : "ID"
-          ) +
+          prefix +
           String(
             100000 +
             index +
@@ -756,7 +671,17 @@ function runScreening() {
 
           dec,
 
-          file
+          file,
+
+          faceMatch:
+            state.face
+              ? "SIMULATED"
+              : "NOT PROVIDED",
+
+          integrity:
+            risk >= 75
+              ? "Review Required"
+              : "Consistent"
 
         };
 
@@ -771,8 +696,8 @@ function runScreening() {
           ...item,
 
           officer:
-            currentOfficer
-              ? currentOfficer.name
+            state.currentOfficer
+              ? state.currentOfficer.name
               : "Officer on Duty",
 
           hash:
@@ -798,17 +723,22 @@ function runScreening() {
   updateDashboard();
 
 
-  $("resultsCard")
-    .style.display = "block";
+  $("resultsCard").style.display =
+    "block";
 
 }
 
 
 /* ============================================================
-   28. SUMMARY
+   SUMMARY
 ============================================================ */
 
 function renderSummary(results) {
+
+  if (!results.length) {
+    return;
+  }
+
 
   const flagged =
     results.filter(
@@ -831,12 +761,24 @@ function renderSummary(results) {
     );
 
 
-  const level =
-    avg < 30
-      ? "LOW"
-      : avg < 55
-        ? "MEDIUM"
-        : "HIGH";
+  let level;
+
+
+  if (avg < 30) {
+
+    level = "LOW";
+
+  }
+  else if (avg < 55) {
+
+    level = "MEDIUM";
+
+  }
+  else {
+
+    level = "HIGH";
+
+  }
 
 
   const cls =
@@ -898,35 +840,27 @@ function renderSummary(results) {
       </small>
 
 
-      <div
-        class="risk-score ${cls}"
-      >
+      <div class="risk-score ${cls}">
         ${avg}/100
       </div>
 
 
-      <span
-        class="risk-label ${cls}-label"
-      >
-        ${level} RISK
-      </span>
+      <div class="risk-label ${cls}">
+        ${level}
+      </div>
 
 
-      <p
-        class="sub"
-        style="
-          margin-top:10px;
-          margin-bottom:0;
-        "
-      >
+      <small class="muted">
 
         ${
-          flagged
-            ? "Manual review recommended for flagged document(s)."
-            : "No high-risk anomaly detected in this demonstration."
+          level === "LOW"
+            ? "Identity screening indicates low risk."
+            : level === "MEDIUM"
+              ? "Additional verification is recommended."
+              : "High-risk indicators detected. Manual review recommended."
         }
 
-      </p>
+      </small>
 
     </div>
 
@@ -936,251 +870,302 @@ function renderSummary(results) {
 
 
 /* ============================================================
-   29. DOCUMENT RESULTS
+   RESULTS
 ============================================================ */
 
 function renderResults(results) {
 
-  $("resultsArea").innerHTML =
-    results
-      .map(item => {
+  $("resultsArea").innerHTML = results
+    .map(item => {
 
-        const imageURL =
-          URL.createObjectURL(
-            item.file
-          );
-
-
-        return `
-
-          <div class="doc-result-card">
+      const riskClass =
+        item.risk < 30
+          ? "low"
+          : item.risk < 55
+            ? "medium"
+            : "high";
 
 
-            <div class="doc-result-header">
-
-              <img
-                src="${imageURL}"
-                alt="${escapeHTML(item.file.name)}"
-              >
+      const decisionClass =
+        item.dec === "CLEARED"
+          ? "low"
+          : "high";
 
 
-              <div class="doc-result-title">
+      return `
 
-                <b>
-                  ${item.type}
-                </b>
+        <div class="doc-result-card">
 
-                <small>
-                  ${escapeHTML(item.file.name)}
-                </small>
+          <div class="doc-result-head">
 
-              </div>
+            <div>
 
-
-              <span
-                class="risk-label ${
-                  item.dec === "CLEARED"
-                    ? "low-label"
-                    : "high-label"
-                }"
-              >
-
-                ${item.dec}
-
+              <span class="eyebrow">
+                ${escapeHTML(item.type)}
               </span>
+
+              <h3>
+                ${escapeHTML(item.id)}
+              </h3>
 
             </div>
 
 
-
-            <div class="pipeline-mini">
-
-              <span class="tag ok">
-                OCR
-              </span>
-
-              <span class="tag ok">
-                Field Check
-              </span>
-
-              <span class="tag ok">
-                Format
-              </span>
-
-              <span
-                class="tag ${
-                  item.risk > 29
-                    ? "flag"
-                    : "ok"
-                }"
-              >
-                Fraud Risk
-              </span>
-
-              <span class="tag ok">
-                Face Match
-              </span>
-
-            </div>
-
-
-
-            <div class="fields">
-
-
-              <div class="field ok">
-
-                <b>
-                  Document Number
-                </b>
-
-                ${item.id}
-
-              </div>
-
-
-              <div class="field">
-
-                <b>
-                  Detected Type
-                </b>
-
-                ${item.type}
-
-              </div>
-
-
-              <div class="field ok">
-
-                <b>
-                  Data Integrity
-                </b>
-
-                Consistent
-
-              </div>
-
-
-              <div
-                class="field ${
-                  item.risk > 29
-                    ? "alert"
-                    : "ok"
-                }"
-              >
-
-                <b>
-                  Risk Assessment
-                </b>
-
-                ${
-                  item.risk < 30
-                    ? "Low anomaly"
-                    : "Review recommended"
-                }
-
-              </div>
-
-
-            </div>
-
-
-
-            <div class="doc-risk-row">
-
-              <span class="muted">
-                AI confidence
-              </span>
-
-
-              <span
-                class="score ${
-                  item.risk > 29
-                    ? "high"
-                    : "low"
-                }"
-              >
-
-                ${100 - item.risk}%
-
-              </span>
-
-            </div>
-
+            <span class="risk-label ${decisionClass}">
+              ${item.dec}
+            </span>
 
           </div>
 
-        `;
 
-      })
-      .join("");
+          <div class="fields">
+
+            <div>
+
+              <small>
+                Risk Score
+              </small>
+
+              <b class="${riskClass}">
+                ${item.risk}/100
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Decision
+              </small>
+
+              <b>
+                ${item.dec}
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Face Match
+              </small>
+
+              <b>
+
+                ${
+                  item.faceMatch === "SIMULATED"
+                    ? "SIMULATED"
+                    : "NOT PROVIDED"
+                }
+
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <small>
+                Data Integrity
+              </small>
+
+              <b>
+                ${item.integrity}
+              </b>
+
+            </div>
+
+          </div>
+
+
+          <div class="pipeline-mini">
+
+            <span class="tag">
+              Document Scan
+            </span>
+
+            <span class="tag">
+              ${
+                item.faceMatch === "SIMULATED"
+                  ? "Face Match • Demo"
+                  : "Face Match • N/A"
+              }
+            </span>
+
+            <span class="tag">
+              Integrity Check
+            </span>
+
+            <span class="tag">
+              AI Risk • Simulated
+            </span>
+
+          </div>
+
+
+          ${
+            item.risk >= 75
+              ? `
+                <div class="demo-note">
+                  ⚠ Demo high-risk condition detected.
+                  Manual review recommended.
+                </div>
+              `
+              : ""
+          }
+
+        </div>
+
+      `;
+
+    })
+    .join("");
 
 }
 
 
 /* ============================================================
-   30. DASHBOARD
+   DASHBOARD
 ============================================================ */
 
 function updateDashboard() {
 
-
-  $("statTotal").textContent =
+  const total =
     state.screenings.length;
 
 
-  $("statGenuine").textContent =
+  const cleared =
     state.screenings.filter(
       item =>
         item.dec === "CLEARED"
     ).length;
 
 
-  $("statFlagged").textContent =
+  const flagged =
     state.screenings.filter(
       item =>
         item.dec === "FLAGGED"
     ).length;
 
 
-  $("statSessions").textContent =
-    state.sessions;
+  /*
+    Update common dashboard counters
+    if the corresponding IDs exist.
+  */
+
+  const possibleTotalIds = [
+    "totalDocuments",
+    "documentsScreened",
+    "totalScreened",
+    "screenedCount"
+  ];
 
 
+  possibleTotalIds.forEach(id => {
 
-  /* ----------------------------------------------------------
-     RECENT SCREENINGS
-  ---------------------------------------------------------- */
+    const element = $(id);
 
-  $("recentTableBody").innerHTML =
+    if (element) {
+      element.textContent = total;
+    }
 
+  });
+
+
+  const possibleClearedIds = [
+    "clearedDocuments",
+    "clearedCount",
+    "totalCleared"
+  ];
+
+
+  possibleClearedIds.forEach(id => {
+
+    const element = $(id);
+
+    if (element) {
+      element.textContent = cleared;
+    }
+
+  });
+
+
+  const possibleFlaggedIds = [
+    "flaggedDocuments",
+    "flaggedCount",
+    "totalFlagged"
+  ];
+
+
+  possibleFlaggedIds.forEach(id => {
+
+    const element = $(id);
+
+    if (element) {
+      element.textContent = flagged;
+    }
+
+  });
+
+
+  renderScreeningTable();
+
+  renderAuditTable();
+
+}
+
+
+/* ============================================================
+   SCREENING TABLE
+============================================================ */
+
+function renderScreeningTable() {
+
+  const body =
+    $("screeningTableBody");
+
+
+  if (!body) {
+    return;
+  }
+
+
+  body.innerHTML =
     state.screenings
-      .slice(0, 8)
+      .slice(0, 12)
       .map(item => `
 
         <tr>
 
           <td>
-            ${item.time}
+            ${escapeHTML(item.time)}
           </td>
+
 
           <td>
-            ${item.type}
+            ${escapeHTML(item.type)}
           </td>
+
 
           <td>
-            ${item.id}
+            ${escapeHTML(item.id)}
           </td>
 
-          <td
-            class="${
-              item.risk < 30
-                ? "low"
+
+          <td class="${
+            item.risk < 30
+              ? "low"
+              : item.risk < 55
+                ? "medium"
                 : "high"
-            }"
-          >
+          }">
+
             ${item.risk}/100
+
           </td>
+
 
           <td>
 
@@ -1191,7 +1176,9 @@ function updateDashboard() {
                   : "high-label"
               }"
             >
+
               ${item.dec}
+
             </span>
 
           </td>
@@ -1200,6 +1187,7 @@ function updateDashboard() {
 
       `)
       .join("")
+
 
       ||
 
@@ -1211,58 +1199,75 @@ function updateDashboard() {
             colspan="5"
             class="muted"
           >
+
             No screenings yet —
             run a check from Screening.
+
           </td>
 
         </tr>
 
       `;
 
+}
 
 
-  /* ----------------------------------------------------------
-     AUDIT TRAIL
-  ---------------------------------------------------------- */
+/* ============================================================
+   AUDIT TABLE
+============================================================ */
 
-  $("auditTableBody").innerHTML =
+function renderAuditTable() {
 
+  const body =
+    $("auditTableBody");
+
+
+  if (!body) {
+    return;
+  }
+
+
+  body.innerHTML =
     state.audit
       .slice(0, 12)
-      .map(
-        (item, index) => `
+      .map((item, index) => `
 
-          <tr>
+        <tr>
 
-            <td>
-              #${state.audit.length - index}
-            </td>
+          <td>
+            #${state.audit.length - index}
+          </td>
 
-            <td>
-              ${item.time}
-            </td>
 
-            <td>
-              ${escapeHTML(item.officer)}
-            </td>
+          <td>
+            ${escapeHTML(item.time)}
+          </td>
 
-            <td>
-              ${item.type}
-            </td>
 
-            <td>
-              ${item.dec}
-            </td>
+          <td>
+            ${escapeHTML(item.officer)}
+          </td>
 
-            <td>
-              ${item.hash}
-            </td>
 
-          </tr>
+          <td>
+            ${escapeHTML(item.type)}
+          </td>
 
-        `
-      )
+
+          <td>
+            ${escapeHTML(item.dec)}
+          </td>
+
+
+          <td>
+            ${escapeHTML(item.hash)}
+          </td>
+
+        </tr>
+
+      `)
       .join("")
+
 
       ||
 
@@ -1274,7 +1279,9 @@ function updateDashboard() {
             colspan="6"
             class="muted"
           >
+
             No audit records yet.
+
           </td>
 
         </tr>
@@ -1285,86 +1292,111 @@ function updateDashboard() {
 
 
 /* ============================================================
-   31. AUTHENTICATION DEMO
+   AUTHENTICATION DEMO
 ============================================================ */
 
 $("loginBtn").addEventListener(
   "click",
   () => {
 
-    const id =
-      $("officerId")
-        .value
-        .trim();
+    const officerId =
+      $("officerId").value.trim();
 
 
     const pin =
-      $("officerPin")
-        .value
-        .trim();
+      $("officerPin").value.trim();
 
 
-    const valid =
-      id.length > 0 &&
-      pin.length > 0;
+    const account =
+      officerAccounts[officerId];
+
+
+    if (!officerId || !pin) {
+
+      $("loginStatus").textContent =
+        "Enter Officer ID and PIN.";
+
+      $("loginStatus").className =
+        "status-msg fail";
+
+      return;
+
+    }
+
+
+    if (!account) {
+
+      $("loginStatus").textContent =
+        "Officer ID not recognized in demo system.";
+
+      $("loginStatus").className =
+        "status-msg fail";
+
+      return;
+
+    }
+
+
+    if (account.password !== pin) {
+
+      $("loginStatus").textContent =
+        "Incorrect PIN for this demo account.";
+
+      $("loginStatus").className =
+        "status-msg fail";
+
+      return;
+
+    }
 
 
     $("loginStatus").textContent =
-      valid
-        ? "Authentication successful — demo session active."
-        : "Enter Officer ID and PIN.";
-
+      "Authentication successful — demo session active.";
 
     $("loginStatus").className =
-      "status-msg " +
-      (
-        valid
-          ? "ok"
-          : "fail"
-      );
+      "status-msg ok";
 
   }
 );
 
 
 /* ============================================================
-   32. DIGILOCKER DEMO
+   DIGILOCKER DEMO
 ============================================================ */
 
 $("digilockerBtn").addEventListener(
   "click",
   () => {
 
-    const ref =
-      $("digilockerRef")
-        .value
-        .trim();
+    const reference =
+      $("digilockerRef").value.trim();
 
 
-    const valid =
-      ref.length > 0;
+    if (!reference) {
+
+      $("digilockerStatus").textContent =
+        "Enter a document reference number.";
+
+      $("digilockerStatus").className =
+        "status-msg fail";
+
+      return;
+
+    }
 
 
     $("digilockerStatus").textContent =
-      valid
-        ? "DigiLocker verification response received — demo only."
-        : "Enter a document reference number.";
-
+      "DigiLocker demo verification response received — no live API connection.";
 
     $("digilockerStatus").className =
-      "status-msg " +
-      (
-        valid
-          ? "ok"
-          : "fail"
-      );
+      "status-msg ok";
 
   }
 );
 
 
 /* ============================================================
-   33. RESET EVERYTHING
+   RESET EVERYTHING
 ============================================================ */
 
 $("resetBtn").addEventListener(
@@ -1402,19 +1434,24 @@ $("resetBtn").addEventListener(
 
       <p class="placeholder">
 
-        Upload documents and run screening to see
-        the combined identity verification summary.
+        Upload documents and run screening
+        to see the combined identity
+        verification summary.
 
       </p>
 
     `;
 
 
-    $("resultsCard")
-      .style.display = "none";
+    $("resultsCard").style.display =
+      "none";
 
 
-    $("scanBtn").disabled = true;
+    $("resultsArea").innerHTML = "";
+
+
+    $("scanBtn").disabled =
+      true;
 
 
     updateDashboard();
@@ -1424,37 +1461,499 @@ $("resetBtn").addEventListener(
 
 
 /* ============================================================
-   34. PROFILE MENU
+   SECURE LOGIN ELEMENTS
 ============================================================ */
 
-const profileBtn =
-  document.getElementById("profileBtn");
+const loginPage =
+  document.getElementById(
+    "loginPage"
+  );
 
-const profileMenu =
-  document.getElementById("profileMenu");
 
-const myProfileBtn =
-  document.getElementById("myProfileBtn");
+const mainApp =
+  document.getElementById(
+    "mainApp"
+  );
 
-const logoutBtn =
-  document.getElementById("logoutBtn");
 
-const profileModal =
-  document.getElementById("profileModal");
+const enterSystemBtn =
+  document.getElementById(
+    "enterSystemBtn"
+  );
 
-const closeProfile =
-  document.getElementById("closeProfile");
+
+const loginOfficerId =
+  document.getElementById(
+    "loginOfficerId"
+  );
+
+
+const loginPassword =
+  document.getElementById(
+    "loginPassword"
+  );
+
+
+const loginError =
+  document.getElementById(
+    "loginError"
+  );
 
 
 /* ============================================================
-   35. OPEN PROFILE MENU
+   UPDATE OFFICER PROFILE
+============================================================ */
+
+function updateOfficerProfile(
+  officer
+) {
+
+  if (!officer) {
+    return;
+  }
+
+
+  /*
+    Header
+  */
+
+  if ($("headerOfficerName")) {
+
+    $("headerOfficerName")
+      .textContent = officer.name;
+
+  }
+
+
+  if ($("headerOfficerId")) {
+
+    $("headerOfficerId")
+      .textContent = officer.ssbId;
+
+  }
+
+
+  if ($("headerAvatar")) {
+
+    $("headerAvatar")
+      .textContent = officer.avatar;
+
+  }
+
+
+  /*
+    Profile dropdown
+  */
+
+  if ($("menuOfficerName")) {
+
+    $("menuOfficerName")
+      .textContent = officer.name;
+
+  }
+
+
+  if ($("menuOfficerId")) {
+
+    $("menuOfficerId")
+      .textContent = officer.ssbId;
+
+  }
+
+
+  if ($("menuLocation")) {
+
+    $("menuLocation")
+      .textContent = officer.location;
+
+  }
+
+
+  if ($("menuRole")) {
+
+    $("menuRole")
+      .textContent =
+        officer.role;
+
+  }
+
+
+  if ($("menuAvatar")) {
+
+    $("menuAvatar")
+      .textContent =
+        officer.avatar;
+
+  }
+
+
+  /*
+    Full profile modal
+  */
+
+  if ($("profileOfficerName")) {
+
+    $("profileOfficerName")
+      .textContent =
+        officer.name;
+
+  }
+
+
+  if ($("profileOfficerId")) {
+
+    $("profileOfficerId")
+      .textContent =
+        officer.ssbId;
+
+  }
+
+
+  if ($("profileRole")) {
+
+    $("profileRole")
+      .textContent =
+        officer.role;
+
+  }
+
+
+  if ($("profileLocation")) {
+
+    $("profileLocation")
+      .textContent =
+        officer.location;
+
+  }
+
+
+  if ($("profileAccess")) {
+
+    $("profileAccess")
+      .textContent =
+        officer.access;
+
+  }
+
+
+  if ($("profileAvatar")) {
+
+    $("profileAvatar")
+      .textContent =
+        officer.avatar;
+
+  }
+
+}
+
+
+/* ============================================================
+   OPEN MAIN APPLICATION
+============================================================ */
+
+function openMainApp(
+  officer
+) {
+
+  if (officer) {
+
+    state.currentOfficer =
+      officer;
+
+    updateOfficerProfile(
+      officer
+    );
+
+    sessionStorage.setItem(
+      "autheNovaOfficer",
+      JSON.stringify(officer)
+    );
+
+  }
+
+
+  loginPage.style.display =
+    "none";
+
+
+  mainApp.style.display =
+    "block";
+
+
+  sessionStorage.setItem(
+    "autheNovaLoggedIn",
+    "true"
+  );
+
+}
+
+
+/* ============================================================
+   LOGIN VALIDATION
+============================================================ */
+
+function validateLogin() {
+
+  const officerId =
+    loginOfficerId.value.trim();
+
+
+  const password =
+    loginPassword.value.trim();
+
+
+  /*
+    Empty fields
+  */
+
+  if (!officerId || !password) {
+
+    loginError.textContent =
+      "Please enter both Officer ID and Password / PIN.";
+
+    return false;
+
+  }
+
+
+  /*
+    Officer ID format
+  */
+
+  const idPattern =
+    /^IND-\d{3}\/\d{2}$/;
+
+
+  if (!idPattern.test(officerId)) {
+
+    loginError.textContent =
+      "Invalid Officer ID format. Use IND-123/25.";
+
+    return false;
+
+  }
+
+
+  /*
+    PIN format
+  */
+
+  const pinPattern =
+    /^\d{6}$/;
+
+
+  if (!pinPattern.test(password)) {
+
+    loginError.textContent =
+      "Password / PIN must contain exactly 6 numbers.";
+
+    return false;
+
+  }
+
+
+  /*
+    Find officer account
+  */
+
+  const officer =
+    officerAccounts[officerId];
+
+
+  if (!officer) {
+
+    loginError.textContent =
+      "Officer ID not found in the AutheNova demo system.";
+
+    return false;
+
+  }
+
+
+  /*
+    Check password
+  */
+
+  if (
+    officer.password !== password
+  ) {
+
+    loginError.textContent =
+      "Incorrect Password / PIN.";
+
+    return false;
+
+  }
+
+
+  /*
+    Successful login
+  */
+
+  loginError.textContent = "";
+
+  openMainApp(officer);
+
+  return true;
+
+}
+
+
+/* ============================================================
+   REMEMBER LOGIN
+============================================================ */
+
+const savedOfficer =
+  sessionStorage.getItem(
+    "autheNovaOfficer"
+  );
+
+
+if (
+  sessionStorage.getItem(
+    "autheNovaLoggedIn"
+  ) === "true" &&
+  savedOfficer
+) {
+
+  try {
+
+    const officer =
+      JSON.parse(savedOfficer);
+
+
+    const validOfficer =
+      Object.values(
+        officerAccounts
+      ).some(
+        account =>
+          account.ssbId ===
+          officer.ssbId
+      );
+
+
+    if (validOfficer) {
+
+      openMainApp(
+        officer
+      );
+
+    }
+    else {
+
+      sessionStorage.removeItem(
+        "autheNovaLoggedIn"
+      );
+
+      sessionStorage.removeItem(
+        "autheNovaOfficer"
+      );
+
+    }
+
+  }
+  catch (error) {
+
+    sessionStorage.removeItem(
+      "autheNovaLoggedIn"
+    );
+
+    sessionStorage.removeItem(
+      "autheNovaOfficer"
+    );
+
+  }
+
+}
+
+
+/* ============================================================
+   LOGIN BUTTON
+============================================================ */
+
+enterSystemBtn.addEventListener(
+  "click",
+  validateLogin
+);
+
+
+/* ============================================================
+   ENTER KEY LOGIN
+============================================================ */
+
+[
+  loginOfficerId,
+  loginPassword
+
+].forEach(input => {
+
+  input.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        validateLogin();
+
+      }
+
+    }
+  );
+
+});
+
+
+/* ============================================================
+   PROFILE MENU
+============================================================ */
+
+const profileBtn =
+  document.getElementById(
+    "profileBtn"
+  );
+
+
+const profileMenu =
+  document.getElementById(
+    "profileMenu"
+  );
+
+
+const myProfileBtn =
+  document.getElementById(
+    "myProfileBtn"
+  );
+
+
+const logoutBtn =
+  document.getElementById(
+    "logoutBtn"
+  );
+
+
+const profileModal =
+  document.getElementById(
+    "profileModal"
+  );
+
+
+const closeProfile =
+  document.getElementById(
+    "closeProfile"
+  );
+
+
+/* ============================================================
+   OPEN PROFILE MENU
 ============================================================ */
 
 profileBtn.addEventListener(
   "click",
-  e => {
+  event => {
 
-    e.stopPropagation();
+    event.stopPropagation();
 
     profileMenu.classList.toggle(
       "show"
@@ -1465,16 +1964,19 @@ profileBtn.addEventListener(
 
 
 /* ============================================================
-   36. CLOSE PROFILE MENU
+   CLOSE PROFILE MENU
+   OUTSIDE CLICK
 ============================================================ */
 
 document.addEventListener(
   "click",
-  e => {
+  event => {
 
     if (
-      !profileMenu.contains(e.target) &&
-      e.target !== profileBtn
+      !profileMenu.contains(
+        event.target
+      ) &&
+      event.target !== profileBtn
     ) {
 
       profileMenu.classList.remove(
@@ -1488,7 +1990,7 @@ document.addEventListener(
 
 
 /* ============================================================
-   37. OPEN PROFILE MODAL
+   OPEN PROFILE MODAL
 ============================================================ */
 
 myProfileBtn.addEventListener(
@@ -1509,7 +2011,7 @@ myProfileBtn.addEventListener(
 
 
 /* ============================================================
-   38. CLOSE PROFILE MODAL
+   CLOSE PROFILE MODAL
 ============================================================ */
 
 closeProfile.addEventListener(
@@ -1525,15 +2027,16 @@ closeProfile.addEventListener(
 
 
 /* ============================================================
-   39. CLOSE MODAL BY BACKGROUND
+   CLOSE MODAL BY BACKGROUND CLICK
 ============================================================ */
 
 profileModal.addEventListener(
   "click",
-  e => {
+  event => {
 
     if (
-      e.target === profileModal
+      event.target ===
+      profileModal
     ) {
 
       profileModal.classList.remove(
@@ -1547,210 +2050,51 @@ profileModal.addEventListener(
 
 
 /* ============================================================
-   40. SECURE LOGIN
+   ESCAPE KEY
 ============================================================ */
 
-enterSystemBtn.addEventListener(
-  "click",
-  () => {
-
-
-    const officerId =
-      loginOfficerId
-        .value
-        .trim()
-        .toUpperCase();
-
-
-    const password =
-      loginPassword
-        .value
-        .trim();
-
-
-
-    /* --------------------------------------------------------
-       EMPTY CHECK
-    -------------------------------------------------------- */
-
-    if (!officerId || !password) {
-
-      loginError.textContent =
-        "Please enter both Officer ID and Password / PIN.";
-
-      return;
-
-    }
-
-
-
-    /* --------------------------------------------------------
-       OFFICER ID FORMAT
-    -------------------------------------------------------- */
-
-    const officerIdPattern =
-      /^IND-\d{3}\/\d{2}$/;
-
+document.addEventListener(
+  "keydown",
+  event => {
 
     if (
-      !officerIdPattern.test(
-        officerId
-      )
+      event.key === "Escape"
     ) {
 
-      loginError.textContent =
-        "Invalid Officer ID format. Use IND-123/25.";
+      profileMenu.classList.remove(
+        "show"
+      );
 
-      return;
-
-    }
-
-
-
-    /* --------------------------------------------------------
-       PIN FORMAT
-    -------------------------------------------------------- */
-
-    const pinPattern =
-      /^\d{6}$/;
-
-
-    if (
-      !pinPattern.test(
-        password
-      )
-    ) {
-
-      loginError.textContent =
-        "Password / PIN must contain exactly 6 numbers.";
-
-      return;
+      profileModal.classList.remove(
+        "show"
+      );
 
     }
-
-
-
-    /* --------------------------------------------------------
-       FIND ACCOUNT
-    -------------------------------------------------------- */
-
-    const officer =
-      officerAccounts[
-        officerId
-      ];
-
-
-    if (!officer) {
-
-      loginError.textContent =
-        "Officer account not found.";
-
-      return;
-
-    }
-
-
-
-    /* --------------------------------------------------------
-       PASSWORD CHECK
-    -------------------------------------------------------- */
-
-    if (
-      officer.password !== password
-    ) {
-
-      loginError.textContent =
-        "Incorrect Password / PIN.";
-
-      return;
-
-    }
-
-
-
-    /* --------------------------------------------------------
-       SUCCESS
-    -------------------------------------------------------- */
-
-    currentOfficer = {
-
-      ...officer,
-
-      officerId: officerId
-
-    };
-
-
-    /* Save account in browser session */
-
-    sessionStorage.setItem(
-      "autheNovaOfficer",
-      JSON.stringify(
-        currentOfficer
-      )
-    );
-
-
-    /* Update all profile information */
-
-    updateOfficerProfile(
-      currentOfficer
-    );
-
-
-    /* Open system */
-
-    loginError.textContent = "";
-
-    openMainApp();
 
   }
 );
 
 
 /* ============================================================
-   41. ENTER KEY LOGIN
-============================================================ */
-
-[
-  loginOfficerId,
-  loginPassword
-
-].forEach(input => {
-
-  input.addEventListener(
-    "keydown",
-    e => {
-
-      if (
-        e.key === "Enter"
-      ) {
-
-        enterSystemBtn.click();
-
-      }
-
-    }
-  );
-
-});
-
-
-/* ============================================================
-   42. LOGOUT
+   LOGOUT
 ============================================================ */
 
 logoutBtn.addEventListener(
   "click",
   () => {
 
-
-    currentOfficer = null;
+    sessionStorage.removeItem(
+      "autheNovaLoggedIn"
+    );
 
 
     sessionStorage.removeItem(
       "autheNovaOfficer"
     );
+
+
+    state.currentOfficer =
+      null;
 
 
     profileMenu.classList.remove(
@@ -1787,59 +2131,9 @@ logoutBtn.addEventListener(
 
 
 /* ============================================================
-   43. RESTORE LOGGED-IN OFFICER
-============================================================ */
-
-const savedOfficer =
-  sessionStorage.getItem(
-    "autheNovaOfficer"
-  );
-
-
-if (savedOfficer) {
-
-  try {
-
-    currentOfficer =
-      JSON.parse(
-        savedOfficer
-      );
-
-
-    updateOfficerProfile(
-      currentOfficer
-    );
-
-
-    openMainApp();
-
-
-  } catch (error) {
-
-    console.error(
-      "Unable to restore officer session:",
-      error
-    );
-
-
-    sessionStorage.removeItem(
-      "autheNovaOfficer"
-    );
-
-  }
-
-}
-
-
-/* ============================================================
-   44. INITIAL DASHBOARD
-============================================================ */
-
-updateDashboard();
-
-
-/* ============================================================
-   45. INITIAL SCAN BUTTON
+   INITIALIZE
 ============================================================ */
 
 updateScanButton();
+
+updateDashboard();

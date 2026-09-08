@@ -40,21 +40,34 @@
       Sign in to access the checkpoint screening terminal.
     </p>
 
-    <label class="lbl">Officer ID</label>
+   <label class="lbl">Officer ID</label>
+<input
+  type="text"
+  id="loginOfficerId"
+  placeholder="IND-123/25"
+  maxlength="10"
+  required
+>
 
-    <input
-      type="text"
-      id="loginOfficerId"
-      placeholder="Enter Officer ID"
-    >
+<small class="input-hint">
+  Format: <b>IND-123/25</b>
+</small>
 
-    <label class="lbl">Password / PIN</label>
 
-    <input
-      type="password"
-      id="loginPassword"
-      placeholder="Enter password or PIN"
-    >
+<label class="lbl">Password / PIN</label>
+<input
+  type="password"
+  id="loginPassword"
+  placeholder="Enter 6-digit PIN"
+  inputmode="numeric"
+  maxlength="6"
+  minlength="6"
+  required
+>
+
+<small class="input-hint">
+  Password must be <b>6 numbers</b>.
+</small>
 
     <button id="enterSystemBtn" class="login-btn">
       Login to AutheNova →

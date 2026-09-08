@@ -5,238 +5,130 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>AutheNova | AI-Based Fake Identity & Document Screening System</title>
+  <title>
+    AutheNova | AI-Based Fake Identity & Document Screening System
+  </title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <!-- =========================================================
+       LOGIN PAGE
+  ========================================================== -->
 
-<!-- =========================================================
-     LOGIN PAGE
-========================================================= -->
+  <section id="loginPage" class="login-page">
 
-<section id="loginPage" class="login-page">
+    <div class="login-panel">
 
-  <div class="login-panel">
+      <div class="login-brand">
 
-    <div class="login-brand">
-
-      <div class="login-logo">AN</div>
-
-      <div>
-        <h1>AutheNova</h1>
-        <p>AI-Based Fake Identity & Document Screening System</p>
-      </div>
-
-    </div>
-
-
-    <div class="login-divider"></div>
-
-    <span class="eyebrow">SECURE OFFICER ACCESS</span>
-
-    <h2>Officer Login</h2>
-
-    <p class="login-sub">
-      Sign in to access the checkpoint screening terminal.
-    </p>
-
-
-    <!-- OFFICER ID -->
-
-    <label class="lbl">
-      Officer ID
-    </label>
-
-    <input
-      type="text"
-      id="loginOfficerId"
-      placeholder="IND-123/25"
-      maxlength="10"
-      autocomplete="off"
-      required
-    >
-
-    <small class="input-hint">
-      Format: <b>IND-123/25</b>
-    </small>
-
-
-    <!-- PASSWORD -->
-
-    <label class="lbl">
-      Password / PIN
-    </label>
-
-    <input
-      type="password"
-      id="loginPassword"
-      placeholder="Enter 6-digit PIN"
-      inputmode="numeric"
-      maxlength="6"
-      minlength="6"
-      autocomplete="off"
-      required
-    >
-
-    <small class="input-hint">
-      Password must be <b>6 numbers</b>.
-    </small>
-
-
-    <!-- LOGIN BUTTON -->
-
-    <button
-      id="enterSystemBtn"
-      class="login-btn"
-      type="button"
-    >
-      Login to AutheNova →
-    </button>
-
-    <p
-      id="loginError"
-      class="login-error"
-    ></p>
-
-
-    <div class="login-security">
-
-      <span>🔒</span>
-
-      <div>
-        <b>Authorized access only</b>
-        <small>SSB Checkpoint • Secure Terminal</small>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- =========================================================
-     MAIN APPLICATION
-========================================================= -->
-
-<div id="mainApp">
-
-
-<!-- =========================================================
-     TOP HEADER
-========================================================= -->
-
-<header class="topbar">
-
-
-  <!-- BRAND -->
-
-  <div class="brand">
-
-    <div class="logo">
-      AN
-    </div>
-
-    <div>
-
-      <h1>
-        AutheNova
-      </h1>
-
-      <span>
-        AI-Based Fake Identity & Document Screening System
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <!-- ORGANIZATION -->
-
-  <div class="org-badge">
-
-    <b>
-      Sashastra Seema Bal (SSB)
-    </b>
-
-    <small>
-      Border Checkpoint Screening Terminal
-    </small>
-
-  </div>
-
-
-  <!-- =======================================================
-       DYNAMIC PROFILE
-  ======================================================== -->
-
-  <div class="profile-wrap">
-
-    <button
-      class="profile-btn"
-      id="profileBtn"
-      type="button"
-    >
-
-      <div
-        class="avatar"
-        id="headerAvatar"
-      >
-        O
-      </div>
-
-
-      <div class="profile-text">
-
-        <b id="headerOfficerName">
-          Officer on Duty
-        </b>
-
-        <small id="headerOfficerId">
-          SSB-ID-00214
-        </small>
-
-      </div>
-
-
-      <span class="profile-arrow">
-        ⌄
-      </span>
-
-    </button>
-
-
-
-    <!-- PROFILE DROPDOWN -->
-
-    <div
-      class="profile-menu"
-      id="profileMenu"
-    >
-
-      <div class="profile-menu-head">
-
-        <div
-          class="avatar large"
-          id="menuAvatar"
-        >
-          O
+        <div class="login-logo">
+          AN
         </div>
 
+        <div>
+          <h1>AutheNova</h1>
+
+          <p>
+            AI-Based Fake Identity & Document Screening System
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="login-divider"></div>
+
+
+      <span class="eyebrow">
+        SECURE OFFICER ACCESS
+      </span>
+
+      <h2>
+        Officer Login
+      </h2>
+
+      <p class="login-sub">
+        Sign in to access the checkpoint screening terminal.
+      </p>
+
+
+      <!-- OFFICER ID -->
+
+      <label class="lbl" for="loginOfficerId">
+        Officer ID
+      </label>
+
+      <input
+        type="text"
+        id="loginOfficerId"
+        placeholder="IND-123/25"
+        maxlength="10"
+        autocomplete="username"
+        required
+      >
+
+      <small class="input-hint">
+        Format: <b>IND-123/25</b>
+      </small>
+
+
+      <!-- PASSWORD -->
+
+      <label class="lbl" for="loginPassword">
+        Password / PIN
+      </label>
+
+      <input
+        type="password"
+        id="loginPassword"
+        placeholder="Enter 6-digit PIN"
+        inputmode="numeric"
+        maxlength="6"
+        minlength="6"
+        autocomplete="current-password"
+        required
+      >
+
+      <small class="input-hint">
+        Password must be <b>6 numbers</b>.
+      </small>
+
+
+      <!-- LOGIN -->
+
+      <button
+        id="enterSystemBtn"
+        class="login-btn"
+        type="button"
+      >
+        Login to AutheNova →
+      </button>
+
+
+      <p
+        id="loginError"
+        class="login-error"
+        aria-live="polite"
+      ></p>
+
+
+      <!-- SECURITY -->
+
+      <div class="login-security">
+
+        <span>🔒</span>
 
         <div>
 
-          <b id="menuOfficerName">
-            Officer on Duty
+          <b>
+            Authorized access only
           </b>
 
-          <small id="menuOfficerId">
-            SSB-ID-00214
+          <small>
+            SSB Checkpoint • Panitanki, WB
           </small>
 
         </div>
@@ -244,986 +136,1119 @@
       </div>
 
 
+      <!-- PROTOTYPE NOTICE -->
 
-      <!-- LOCATION -->
+      <div class="prototype-notice">
+        <span>●</span>
+        PROTOTYPE • DEMONSTRATION SYSTEM
+      </div>
 
-      <div class="profile-line">
+    </div>
 
-        <span>📍</span>
+  </section>
 
-        <span id="menuLocation">
-          Panitanki, West Bengal
-        </span>
+
+
+  <!-- =========================================================
+       MAIN APPLICATION
+  ========================================================== -->
+
+  <div id="mainApp">
+
+    <!-- =======================================================
+         TOP BAR
+    ======================================================== -->
+
+    <header class="topbar">
+
+      <!-- BRAND -->
+
+      <div class="brand">
+
+        <div class="logo">
+          AN
+        </div>
+
+        <div>
+
+          <h1>
+            AutheNova
+          </h1>
+
+          <span>
+            AI-Based Fake Identity & Document Screening System
+          </span>
+
+        </div>
 
       </div>
 
 
+      <!-- ORGANIZATION -->
 
-      <!-- ROLE -->
+      <div class="org-badge">
 
-      <div class="profile-line">
+        <b>
+          Sashastra Seema Bal (SSB)
+        </b>
 
-        <span>🛡</span>
-
-        <span id="menuRole">
-          Authorized SSB Officer
-        </span>
+        <small>
+          Border Checkpoint Screening Terminal
+        </small>
 
       </div>
-
 
 
       <!-- PROFILE -->
 
-      <button
-        class="menu-profile"
-        id="myProfileBtn"
-        type="button"
-      >
-        👤 Your Profile
-      </button>
+      <div class="profile-wrap">
 
+        <button
+          class="profile-btn"
+          id="profileBtn"
+          type="button"
+          aria-label="Open officer profile menu"
+        >
 
-      <!-- LOGOUT -->
+          <div
+            class="avatar"
+            id="headerAvatar"
+          >
+            A
+          </div>
 
-      <button
-        class="menu-logout"
-        id="logoutBtn"
-        type="button"
-      >
-        ↪ Log Out
-      </button>
+          <div class="profile-text">
 
-    </div>
+            <b id="headerOfficerName">
+              Officer Arjun Sharma
+            </b>
 
-  </div>
+            <small id="headerOfficerId">
+              SSB-ID-00214
+            </small>
 
-</header>
+          </div>
 
-
-
-<!-- =========================================================
-     APPLICATION SHELL
-========================================================= -->
-
-<div class="app-shell">
-
-
-  <!-- =======================================================
-       SIDEBAR
-  ======================================================== -->
-
-  <aside class="sidebar">
-
-    <nav>
-
-      <button
-        class="nav-btn active"
-        data-page="screening"
-        type="button"
-      >
-        🛂 Screening
-      </button>
-
-
-      <button
-        class="nav-btn"
-        data-page="dashboard"
-        type="button"
-      >
-        📊 Dashboard
-      </button>
-
-
-      <button
-        class="nav-btn"
-        data-page="audit"
-        type="button"
-      >
-        🔗 Audit Trail
-      </button>
-
-
-      <button
-        class="nav-btn"
-        data-page="auth"
-        type="button"
-      >
-        🔐 Authentication
-      </button>
-
-    </nav>
-
-
-
-    <div class="sidebar-footer">
-
-      <small>
-        PS ID: SIH26188
-      </small>
-
-      <small>
-        Team: AZERO
-      </small>
-
-    </div>
-
-  </aside>
-
-
-
-  <!-- =======================================================
-       MAIN CONTENT
-  ======================================================== -->
-
-  <main class="content">
-
-
-    <!-- =====================================================
-         SCREENING PAGE
-    ====================================================== -->
-
-    <section
-      id="screening"
-      class="page active"
-    >
-
-      <div class="section-head">
-
-        <div>
-
-          <span class="eyebrow">
-            REAL-TIME VERIFICATION
+          <span class="profile-arrow">
+            ⌄
           </span>
 
-          <h2>
-            Traveller Screening
-          </h2>
-
-          <p class="sub">
-            Upload identity and travel documents to run a unified
-            verification workflow.
-          </p>
-
-        </div>
+        </button>
 
 
-        <span class="engine-status">
+        <!-- PROFILE DROPDOWN -->
 
-          <i></i>
+        <div
+          class="profile-menu"
+          id="profileMenu"
+        >
 
-          AI ENGINE READY
+          <div class="profile-menu-head">
 
-        </span>
-
-      </div>
-
-
-
-      <div class="grid-2">
-
-
-        <!-- =================================================
-             DOCUMENT CARD
-        ================================================== -->
-
-        <div class="card">
-
-          <div class="card-head">
+            <div
+              class="avatar large"
+              id="menuAvatar"
+            >
+              A
+            </div>
 
             <div>
 
-              <h3>
-                Document Intake
-              </h3>
+              <b id="menuOfficerName">
+                Officer Arjun Sharma
+              </b>
 
-              <p class="sub">
-                Multiple documents can be uploaded together.
-              </p>
+              <small id="menuOfficerId">
+                SSB-ID-00214
+              </small>
 
             </div>
 
-            <span class="step">
-              01
+          </div>
+
+
+          <div class="profile-line">
+
+            <span>📍</span>
+
+            <span id="menuLocation">
+              Panitanki, West Bengal
             </span>
 
           </div>
 
 
+          <div class="profile-line">
 
-          <label class="lbl">
-            Identity / Travel Documents
-          </label>
+            <span>🛡</span>
 
-
-
-          <!-- DOCUMENT UPLOAD -->
-
-          <div
-            class="upload-box"
-            id="uploadBox"
-          >
-
-            <div class="upload-icon">
-              ↑
-            </div>
-
-            <p>
-              <b>Click to upload</b>
-              or drag & drop
-            </p>
-
-            <p class="muted">
-              JPG / PNG • Passport • Visa • ID • Licence • Permit • Adhar Card
-            </p>
-
-            <input
-              type="file"
-              id="fileInput"
-              accept="image/*"
-              multiple
-              hidden
-            >
-
-          </div>
-
-
-
-          <!-- DOCUMENT QUEUE -->
-
-          <div
-            id="docQueue"
-            class="doc-queue"
-          ></div>
-
-
-
-          <!-- =================================================
-               FACE CAPTURE
-          ================================================== -->
-
-          <label class="lbl">
-            Live Face Capture
-          </label>
-
-
-          <div
-            class="upload-box small"
-            id="faceUploadBox"
-          >
-
-            <div class="upload-icon small-icon">
-              ◉
-            </div>
-
-            <p>
-              <b>Upload traveller photo</b>
-            </p>
-
-            <p class="muted">
-              Used for identity-match demonstration
-            </p>
-
-            <input
-              type="file"
-              id="faceInput"
-              accept="image/jpeg,image/png,image/jpg,image/webp"
-              hidden
-            >
-
-          </div>
-
-
-
-          <!-- =================================================
-               FACE PREVIEW
-          ================================================== -->
-
-          <div
-            id="facePreviewContainer"
-            class="face-preview-container"
-          >
-
-            <img
-              id="facePreview"
-              alt="Traveller photo preview"
-            >
-
-            <button
-              type="button"
-              id="removeFaceBtn"
-              class="remove-face-btn"
-            >
-              Remove photo
-            </button>
-
-          </div>
-
-
-
-          <!-- SCREENING BUTTON -->
-
-          <button
-            id="scanBtn"
-            disabled
-            type="button"
-          >
-            ▶ Run Multi-Auth AI Screening
-          </button>
-
-
-
-          <!-- RESET -->
-
-          <button
-            id="resetBtn"
-            class="secondary-btn"
-            type="button"
-          >
-            Reset All
-          </button>
-
-        </div>
-
-
-
-        <!-- =================================================
-             SUMMARY CARD
-        ================================================== -->
-
-        <div class="card summary-card">
-
-          <div class="card-head">
-
-            <div>
-
-              <h3>
-                Traveller Verification Summary
-              </h3>
-
-              <p class="sub">
-                Combined result across uploaded documents.
-              </p>
-
-            </div>
-
-            <span class="step">
-              02
+            <span id="menuRole">
+              Checkpoint Screening Officer
             </span>
 
           </div>
 
 
+          <button
+            class="menu-profile"
+            id="myProfileBtn"
+            type="button"
+          >
+            👤 Your Profile
+          </button>
 
-          <div id="summaryArea">
 
-            <p class="placeholder">
-              Upload documents and run screening to see the
-              combined identity verification summary.
-            </p>
-
-          </div>
+          <button
+            class="menu-logout"
+            id="logoutBtn"
+            type="button"
+          >
+            ↪ Log Out
+          </button>
 
         </div>
 
       </div>
+
+    </header>
+
+
+
+    <!-- =======================================================
+         APPLICATION SHELL
+    ======================================================== -->
+
+    <div class="app-shell">
+
+
+      <!-- =====================================================
+           SIDEBAR
+      ====================================================== -->
+
+      <aside class="sidebar">
+
+        <nav>
+
+          <button
+            class="nav-btn active"
+            data-page="screening"
+            type="button"
+          >
+            🛂 Screening
+          </button>
+
+
+          <button
+            class="nav-btn"
+            data-page="dashboard"
+            type="button"
+          >
+            📊 Dashboard
+          </button>
+
+
+          <button
+            class="nav-btn"
+            data-page="audit"
+            type="button"
+          >
+            🔗 Audit Trail
+          </button>
+
+
+          <button
+            class="nav-btn"
+            data-page="auth"
+            type="button"
+          >
+            🔐 Authentication
+          </button>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+          <small>
+            PS ID: SIH26188
+          </small>
+
+          <small>
+            Team: AZERO
+          </small>
+
+        </div>
+
+      </aside>
 
 
 
       <!-- =====================================================
-           RESULTS
+           MAIN CONTENT
       ====================================================== -->
 
-      <div
-        class="card"
-        id="resultsCard"
-        style="display:none;"
-      >
+      <main class="content">
 
-        <div class="card-head">
 
-          <div>
+        <!-- ===================================================
+             SCREENING PAGE
+        ==================================================== -->
 
-            <h3>
-              Per-Document AI Analysis
-            </h3>
+        <section
+          id="screening"
+          class="page active"
+        >
 
-            <p class="sub">
-              Document-level checks and detected fields.
-            </p>
+          <div class="section-head">
+
+            <div>
+
+              <span class="eyebrow">
+                REAL-TIME VERIFICATION
+              </span>
+
+              <h2>
+                Traveller Screening
+              </h2>
+
+              <p class="sub">
+                Upload identity and travel documents to run a unified
+                verification workflow.
+              </p>
+
+            </div>
+
+
+            <div class="screening-status-group">
+
+              <span class="engine-status">
+
+                <i></i>
+
+                AI ENGINE READY
+
+              </span>
+
+              <span class="prototype-badge">
+                PROTOTYPE • SIMULATED AI
+              </span>
+
+            </div>
 
           </div>
 
-          <span class="step">
-            03
-          </span>
 
-        </div>
 
+          <!-- TWO COLUMN LAYOUT -->
 
-        <div
-          id="resultsArea"
-          class="doc-results"
-        ></div>
+          <div class="grid-2">
 
-      </div>
 
-    </section>
+            <!-- =================================================
+                 DOCUMENT INTAKE
+            ================================================== -->
 
+            <div class="card">
 
+              <div class="card-head">
 
-    <!-- =====================================================
-         DASHBOARD
-    ====================================================== -->
+                <div>
 
-    <section
-      id="dashboard"
-      class="page"
-    >
+                  <h3>
+                    Document Intake
+                  </h3>
 
-      <div class="section-head">
+                  <p class="sub">
+                    Multiple documents can be uploaded together.
+                  </p>
 
-        <div>
+                </div>
 
-          <span class="eyebrow">
-            OPERATIONS
-          </span>
+                <span class="step">
+                  01
+                </span>
 
-          <h2>
-            Checkpoint Overview
-          </h2>
+              </div>
 
-          <p class="sub">
-            Live statistics from the current screening session.
-          </p>
 
-        </div>
+              <label class="lbl">
+                Identity / Travel Documents
+              </label>
 
-      </div>
 
+              <!-- DOCUMENT UPLOAD -->
 
-
-      <!-- STATS -->
-
-      <div class="stats-grid">
-
-
-        <div class="stat-card">
-
-          <span id="statTotal">
-            0
-          </span>
-
-          <small>
-            Documents Screened Today
-          </small>
-
-        </div>
-
-
-
-        <div class="stat-card genuine">
-
-          <span id="statGenuine">
-            0
-          </span>
-
-          <small>
-            Genuine / Cleared
-          </small>
-
-        </div>
-
-
-
-        <div class="stat-card flagged">
-
-          <span id="statFlagged">
-            0
-          </span>
-
-          <small>
-            Flagged for Review
-          </small>
-
-        </div>
-
-
-
-        <div class="stat-card">
-
-          <span id="statSessions">
-            0
-          </span>
-
-          <small>
-            Multi-Doc Sessions Run
-          </small>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- RECENT SCREENINGS -->
-
-      <div class="card">
-
-        <div class="card-head">
-
-          <h3>
-            Recent Screenings
-          </h3>
-
-        </div>
-
-
-
-        <table class="data-table">
-
-          <thead>
-
-            <tr>
-
-              <th>
-                Time
-              </th>
-
-              <th>
-                Detected Type
-              </th>
-
-              <th>
-                ID / Doc No.
-              </th>
-
-              <th>
-                Risk Score
-              </th>
-
-              <th>
-                Decision
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-
-          <tbody id="recentTableBody">
-
-            <tr>
-
-              <td
-                colspan="5"
-                class="muted"
+              <div
+                class="upload-box"
+                id="uploadBox"
+                role="button"
+                tabindex="0"
               >
-                No screenings yet — run a check from Screening.
-              </td>
 
-            </tr>
+                <div class="upload-icon">
+                  ↑
+                </div>
 
-          </tbody>
+                <p>
+                  <b>
+                    Click to upload
+                  </b>
 
-        </table>
+                  or drag & drop
+                </p>
 
-      </div>
+                <p class="muted">
+                  JPG / PNG • Passport • Visa • ID • Licence • Permit • Aadhaar Card
+                </p>
 
-    </section>
+
+                <input
+                  type="file"
+                  id="fileInput"
+                  accept="image/*"
+                  multiple
+                  hidden
+                >
+
+              </div>
 
 
+              <!-- DOCUMENT QUEUE -->
 
-    <!-- =====================================================
-         AUDIT TRAIL
-    ====================================================== -->
-
-    <section
-      id="audit"
-      class="page"
-    >
-
-      <div class="section-head">
-
-        <div>
-
-          <span class="eyebrow">
-            TRACEABILITY
-          </span>
-
-          <h2>
-            Tamper-Proof Audit Trail
-          </h2>
-
-          <p class="sub">
-            Every screening decision is logged for investigation
-            and intelligence analysis.
-          </p>
-
-        </div>
-
-      </div>
+              <div
+                id="docQueue"
+                class="doc-queue"
+              ></div>
 
 
 
-      <div class="card">
+              <!-- =================================================
+                   FACE CAPTURE
+              ================================================== -->
 
-        <table class="data-table">
-
-          <thead>
-
-            <tr>
-
-              <th>
-                Block #
-              </th>
-
-              <th>
-                Time
-              </th>
-
-              <th>
-                Officer
-              </th>
-
-              <th>
-                Detected Type
-              </th>
-
-              <th>
-                Decision
-              </th>
-
-              <th>
-                Hash
-              </th>
-
-            </tr>
-
-          </thead>
+              <label class="lbl">
+                Live Face Capture
+              </label>
 
 
-
-          <tbody id="auditTableBody">
-
-            <tr>
-
-              <td
-                colspan="6"
-                class="muted"
+              <div
+                class="upload-box small"
+                id="faceUploadBox"
+                role="button"
+                tabindex="0"
               >
-                No audit records yet.
-              </td>
 
-            </tr>
+                <div class="upload-icon small-icon">
+                  ◉
+                </div>
 
-          </tbody>
+                <p>
+                  <b>
+                    Upload traveller photo
+                  </b>
+                </p>
 
-        </table>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- =====================================================
-         AUTHENTICATION
-    ====================================================== -->
-
-    <section
-      id="auth"
-      class="page"
-    >
-
-      <div class="section-head">
-
-        <div>
-
-          <span class="eyebrow">
-            ACCESS CONTROL
-          </span>
-
-          <h2>
-            Officer Authentication
-          </h2>
-
-          <p class="sub">
-            Demo interface for authorized checkpoint access.
-          </p>
-
-        </div>
-
-      </div>
+                <p class="muted">
+                  Used for simulated identity-match demonstration
+                </p>
 
 
+                <input
+                  type="file"
+                  id="faceInput"
+                  accept="image/jpeg,image/png,image/jpg,image/webp"
+                  hidden
+                >
 
-      <div class="grid-2">
+              </div>
 
 
-        <!-- USERKEY -->
+              <!-- FACE PREVIEW -->
 
-        <div class="card">
+              <div
+                id="facePreviewContainer"
+                class="face-preview-container"
+                style="display:none;"
+              >
 
-          <h3>
-            🔑 UserKey Login
-          </h3>
+                <img
+                  id="facePreview"
+                  alt="Traveller photo preview"
+                >
 
-          <p class="sub">
-            Single sign-on demonstration.
-          </p>
+                <button
+                  type="button"
+                  id="removeFaceBtn"
+                  class="remove-face-btn"
+                >
+                  Remove photo
+                </button>
+
+              </div>
 
 
 
-          <label class="lbl">
-            Officer ID
-          </label>
+              <!-- SCREENING -->
 
-          <input
-            type="text"
-            id="officerId"
-            placeholder="SSB-ID-00214"
+              <button
+                id="scanBtn"
+                type="button"
+                disabled
+              >
+                ▶ Run Multi-Auth AI Screening
+              </button>
+
+
+              <!-- RESET -->
+
+              <button
+                id="resetBtn"
+                class="secondary-btn"
+                type="button"
+              >
+                Reset All
+              </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SUMMARY
+            ================================================== -->
+
+            <div class="card summary-card">
+
+              <div class="card-head">
+
+                <div>
+
+                  <h3>
+                    Traveller Verification Summary
+                  </h3>
+
+                  <p class="sub">
+                    Combined result across uploaded documents.
+                  </p>
+
+                </div>
+
+                <span class="step">
+                  02
+                </span>
+
+              </div>
+
+
+              <div id="summaryArea">
+
+                <p class="placeholder">
+                  Upload documents and run screening to see the
+                  combined identity verification summary.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ===================================================
+               RESULTS
+          ==================================================== -->
+
+          <div
+            class="card"
+            id="resultsCard"
+            style="display:none;"
           >
 
+            <div class="card-head">
+
+              <div>
+
+                <h3>
+                  Per-Document AI Analysis
+                </h3>
+
+                <p class="sub">
+                  Document-level checks and detected fields.
+                </p>
+
+              </div>
+
+              <span class="step">
+                03
+              </span>
+
+            </div>
 
 
-          <label class="lbl">
-            UserKey PIN
-          </label>
+            <div
+              id="resultsArea"
+              class="doc-results"
+            ></div>
 
-          <input
-            type="password"
-            id="officerPin"
-            placeholder="••••••"
-            maxlength="6"
-          >
+          </div>
 
-
-
-          <button
-            id="loginBtn"
-            type="button"
-          >
-            Authenticate
-          </button>
-
-
-          <p
-            id="loginStatus"
-            class="status-msg"
-          ></p>
-
-        </div>
-
-
-
-        <!-- DIGILOCKER -->
-
-        <div class="card">
-
-          <h3>
-            🪪 DigiLocker Verification
-          </h3>
-
-          <p class="sub">
-            Cross-verification demonstration.
-          </p>
+        </section>
 
 
 
-          <label class="lbl">
-            Document Reference Number
-          </label>
+        <!-- ===================================================
+             DASHBOARD
+        ==================================================== -->
 
-          <input
-            type="text"
-            id="digilockerRef"
-            placeholder="e.g. P1234567"
-          >
+        <section
+          id="dashboard"
+          class="page"
+        >
 
+          <div class="section-head">
 
+            <div>
 
-          <button
-            id="digilockerBtn"
-            type="button"
-          >
-            Verify with DigiLocker API
-          </button>
+              <span class="eyebrow">
+                OPERATIONS
+              </span>
 
+              <h2>
+                Checkpoint Overview
+              </h2>
 
-          <p
-            id="digilockerStatus"
-            class="status-msg"
-          ></p>
+              <p class="sub">
+                Live statistics from the current screening session.
+              </p>
 
-        </div>
+            </div>
 
-      </div>
-
-    </section>
-
-
-  </main>
-
-</div>
-
-</div>
+          </div>
 
 
 
-<!-- =========================================================
-     PROFILE MODAL
-========================================================= -->
+          <!-- STATISTICS -->
 
-<div
-  class="profile-modal"
-  id="profileModal"
->
-
-  <div class="profile-modal-card">
+          <div class="stats-grid">
 
 
-    <!-- CLOSE -->
+            <div class="stat-card">
 
-    <button
-      class="modal-close"
-      id="closeProfile"
-      type="button"
-    >
-      ×
-    </button>
+              <span id="statTotal">
+                0
+              </span>
+
+              <small>
+                Documents Screened
+              </small>
+
+            </div>
+
+
+            <div class="stat-card genuine">
+
+              <span id="statGenuine">
+                0
+              </span>
+
+              <small>
+                Genuine / Cleared
+              </small>
+
+            </div>
+
+
+            <div class="stat-card flagged">
+
+              <span id="statFlagged">
+                0
+              </span>
+
+              <small>
+                Flagged for Review
+              </small>
+
+            </div>
+
+
+            <div class="stat-card">
+
+              <span id="statSessions">
+                0
+              </span>
+
+              <small>
+                Multi-Doc Sessions Run
+              </small>
+
+            </div>
+
+          </div>
 
 
 
-    <!-- AVATAR -->
+          <!-- RECENT SCREENINGS -->
 
-    <div
-      class="modal-avatar"
-      id="profileAvatar"
-    >
-      O
+          <div class="card">
+
+            <div class="card-head">
+
+              <h3>
+                Recent Screenings
+              </h3>
+
+            </div>
+
+
+            <table class="data-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Time
+                  </th>
+
+                  <th>
+                    Detected Type
+                  </th>
+
+                  <th>
+                    ID / Doc No.
+                  </th>
+
+                  <th>
+                    Risk Score
+                  </th>
+
+                  <th>
+                    Decision
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody id="recentTableBody">
+
+                <tr>
+
+                  <td
+                    colspan="5"
+                    class="muted"
+                  >
+                    No screenings yet — run a check from Screening.
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- ===================================================
+             AUDIT TRAIL
+        ==================================================== -->
+
+        <section
+          id="audit"
+          class="page"
+        >
+
+          <div class="section-head">
+
+            <div>
+
+              <span class="eyebrow">
+                TRACEABILITY
+              </span>
+
+              <h2>
+                Audit Trail
+              </h2>
+
+              <p class="sub">
+                Screening decisions are logged for traceability and
+                review.
+              </p>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="card">
+
+            <table class="data-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Block #
+                  </th>
+
+                  <th>
+                    Time
+                  </th>
+
+                  <th>
+                    Officer
+                  </th>
+
+                  <th>
+                    Detected Type
+                  </th>
+
+                  <th>
+                    Decision
+                  </th>
+
+                  <th>
+                    Hash
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody id="auditTableBody">
+
+                <tr>
+
+                  <td
+                    colspan="6"
+                    class="muted"
+                  >
+                    No audit records yet.
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </section>
+
+
+
+        <!-- ===================================================
+             AUTHENTICATION
+        ==================================================== -->
+
+        <section
+          id="auth"
+          class="page"
+        >
+
+          <div class="section-head">
+
+            <div>
+
+              <span class="eyebrow">
+                ACCESS CONTROL
+              </span>
+
+              <h2>
+                Officer Authentication
+              </h2>
+
+              <p class="sub">
+                Demonstration interface for authorized checkpoint access.
+              </p>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="grid-2">
+
+
+            <!-- USERKEY -->
+
+            <div class="card">
+
+              <h3>
+                🔑 UserKey Login
+              </h3>
+
+              <p class="sub">
+                Single sign-on demonstration.
+              </p>
+
+
+              <label
+                class="lbl"
+                for="officerId"
+              >
+                Officer ID
+              </label>
+
+              <input
+                type="text"
+                id="officerId"
+                placeholder="SSB-ID-00214"
+              >
+
+
+              <label
+                class="lbl"
+                for="officerPin"
+              >
+                UserKey PIN
+              </label>
+
+              <input
+                type="password"
+                id="officerPin"
+                placeholder="••••••"
+                inputmode="numeric"
+                maxlength="6"
+              >
+
+
+              <button
+                id="loginBtn"
+                type="button"
+              >
+                Authenticate
+              </button>
+
+
+              <p
+                id="loginStatus"
+                class="status-msg"
+                aria-live="polite"
+              ></p>
+
+            </div>
+
+
+
+            <!-- DIGILOCKER -->
+
+            <div class="card">
+
+              <h3>
+                🪪 DigiLocker Verification
+              </h3>
+
+              <p class="sub">
+                Cross-verification demonstration.
+              </p>
+
+
+              <label
+                class="lbl"
+                for="digilockerRef"
+              >
+                Document Reference Number
+              </label>
+
+              <input
+                type="text"
+                id="digilockerRef"
+                placeholder="e.g. P1234567"
+              >
+
+
+              <button
+                id="digilockerBtn"
+                type="button"
+              >
+                Run DigiLocker Demo
+              </button>
+
+
+              <p
+                id="digilockerStatus"
+                class="status-msg"
+                aria-live="polite"
+              ></p>
+
+
+              <div class="demo-note">
+                <small>
+                  Demo only — no live DigiLocker API connection is used
+                  in this prototype.
+                </small>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
     </div>
-
-
-
-    <span class="eyebrow">
-      OFFICER PROFILE
-    </span>
-
-
-
-    <h2>
-      Your Profile
-    </h2>
-
-
-
-    <!-- =====================================================
-         DYNAMIC PROFILE DETAILS
-    ====================================================== -->
-
-    <div class="profile-details">
-
-
-      <div>
-
-        <small>
-          Officer Name
-        </small>
-
-        <b id="profileOfficerName">
-          Officer on Duty
-        </b>
-
-      </div>
-
-
-
-      <div>
-
-        <small>
-          Officer ID
-        </small>
-
-        <b id="profileOfficerId">
-          SSB-ID-00214
-        </b>
-
-      </div>
-
-
-
-      <div>
-
-        <small>
-          Role
-        </small>
-
-        <b id="profileRole">
-          Checkpoint Screening Officer
-        </b>
-
-      </div>
-
-
-
-      <div>
-
-        <small>
-          Checkpoint
-        </small>
-
-        <b id="profileLocation">
-          Panitanki, West Bengal
-        </b>
-
-      </div>
-
-
-
-      <div>
-
-        <small>
-          Access Level
-        </small>
-
-        <b id="profileAccess">
-          Authorized
-        </b>
-
-      </div>
-
-
-
-      <div>
-
-        <small>
-          System
-        </small>
-
-        <b>
-          AutheNova Screening Terminal
-        </b>
-
-      </div>
-
-
-    </div>
-
 
   </div>
 
-</div>
+
+
+  <!-- =========================================================
+       PROFILE MODAL
+  ========================================================== -->
+
+  <div
+    class="profile-modal"
+    id="profileModal"
+  >
+
+    <div class="profile-modal-card">
+
+
+      <button
+        class="modal-close"
+        id="closeProfile"
+        type="button"
+        aria-label="Close profile"
+      >
+        ×
+      </button>
+
+
+      <!-- DYNAMIC AVATAR -->
+
+      <div
+        class="modal-avatar"
+        id="profileAvatar"
+      >
+        A
+      </div>
+
+
+      <span class="eyebrow">
+        OFFICER PROFILE
+      </span>
+
+
+      <h2>
+        Your Profile
+      </h2>
+
+
+      <div class="profile-details">
+
+
+        <div>
+
+          <small>
+            Officer Name
+          </small>
+
+          <b id="profileOfficerName">
+            Officer Arjun Sharma
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <small>
+            Officer ID
+          </small>
+
+          <b id="profileOfficerId">
+            SSB-ID-00214
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <small>
+            Role
+          </small>
+
+          <b id="profileRole">
+            Checkpoint Screening Officer
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <small>
+            Checkpoint
+          </small>
+
+          <b id="profileLocation">
+            Panitanki, West Bengal
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <small>
+            Access Level
+          </small>
+
+          <b id="profileAccess">
+            Authorized
+          </b>
+
+        </div>
+
+
+        <div>
+
+          <small>
+            System
+          </small>
+
+          <b>
+            AutheNova Screening Terminal
+          </b>
+
+        </div>
+
+      </div>
+
+
+      <div class="prototype-modal-note">
+        <small>
+          Prototype environment • AI analysis and external
+          verification services are simulated for demonstration.
+        </small>
+      </div>
+
+    </div>
+
+  </div>
 
 
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
+  <!-- =========================================================
+       JAVASCRIPT
+  ========================================================== -->
 
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 
 </body>
+
 </html>

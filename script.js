@@ -1,15 +1,4 @@
 /* ============================================================
-   AUTHeNOVA — FRONTEND PROTOTYPE
-   AI-Based Fake Identity & Document Screening System
-
-   NOTE:
-   This is a frontend demonstration prototype.
-   Risk scoring, face matching and DigiLocker verification
-   are simulated for demonstration purposes.
-============================================================ */
-
-
-/* ============================================================
    OFFICER DEMO ACCOUNTS
 ============================================================ */
 
